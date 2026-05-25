@@ -1,0 +1,83 @@
+# Roast & Roll — Generative Engine Optimization Map
+
+> A boutique coffee shop based in Colorado that offers a cozy, artisan experience with handcrafted coffee beverages alongside freshly made sandwiches and pastries. The 'boutique' identity suggests a curated, intimate atmosphere with attention to quality and a local, community-focused vibe.
+
+---
+
+## Pages
+
+### Home
+https://example.com
+Discover Colorado&#39;s coziest boutique café. Roast &amp; Roll serves handcrafted specialty coffee, fresh pastries, and artisan sandwiches made with love. Visit us today!
+
+### Menu
+https://example.com/menu
+Explore our curated menu of handcrafted coffee beverages, freshly baked pastries, and artisan sandwiches. Find your new favorite order at Roast &amp; Roll — quality in every bite.
+
+### About
+https://example.com/about
+Meet the passionate team behind Roast &amp; Roll, Colorado&#39;s beloved boutique café. Learn how our commitment to quality, craft, and community shapes every cup and every bite we serve.
+
+### Contact
+https://example.com/contact
+Looking for the best specialty coffee and sandwiches near you? Get directions, hours, and reach out to Roast &amp; Roll. We&#39;d love to welcome you into our cozy Colorado café.
+
+## Legal & Policy
+
+### Privacy Policy
+https://example.com/privacy
+Information about how user data is collected, stored, and protected.
+
+### Terms & Conditions
+https://example.com/terms
+Legal terms describing service usage, rights, and policies.
+
+### Accessibility Statement
+https://example.com/accessibility
+Information about WCAG compliance and accessibility features.
+
+---
+
+## How to Contact Us
+
+- (No contact details configured yet.)
+
+### Contact form
+- URL: https://example.com/contact
+- Endpoint: https://example.com/api/email/contact-form
+- Method: POST
+- Content-Type: application/json
+- Fields:
+  - `name` (text, required)
+  - `email` (email, required)
+  - `phone` (tel)
+  - `message` (textarea, required)
+  - `privacy_consent` (checkbox, required)
+
+---
+
+# Business Context (for LLM understanding)
+
+## About Roast & Roll
+A boutique coffee shop based in Colorado that offers a cozy, artisan experience with handcrafted coffee beverages alongside freshly made sandwiches and pastries. The 'boutique' identity suggests a curated, intimate atmosphere with attention to quality and a local, community-focused vibe.
+
+## Services/Products
+- coffee
+- sandwiches
+- pastries
+
+## Target Audience
+- Local Coffee Enthusiasts
+- Social Media Influencers
+- coffee lovers
+
+## Industry
+Food & Beverage
+
+---
+
+# Machine-readable feeds
+
+- Sitemap (XML): https://example.com/sitemap.xml
+- Robots: https://example.com/robots.txt
+- Flattened page text (for LLMs): https://example.com/llms-full.txt
