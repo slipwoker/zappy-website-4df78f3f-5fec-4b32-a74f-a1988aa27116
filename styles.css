@@ -2267,12 +2267,11 @@ html[dir="rtl"] .footer-contact li > a { flex-direction: row !important; }
   box-sizing: border-box;
 }
 
-/* ── Frosted card ── */
 .home-hero-section .home-hero-card {
-  background: rgba(252, 250, 246, 0.93);
-  border: 1px solid var(--border-light);
+  background: transparent;
+  border: none;
   border-radius: 6px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.14);
+  box-shadow: none;
   padding: 40px 36px;
   width: 100%;
   max-width: 420px;
@@ -2293,25 +2292,23 @@ html[dir="rtl"] .footer-contact li > a { flex-direction: row !important; }
   margin-bottom: -4px;
 }
 
-/* ── H1 Headline ── */
 .home-hero-section .home-hero-headline {
   font-family: 'Inter', sans-serif;
   font-size: 2.75rem;
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.01em;
-  color: var(--text-dark);
+  color: var(--text-light);
   margin: 0;
-  text-shadow: none;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
-/* ── H3 Subtitle ── */
 .home-hero-section .home-hero-subtitle {
   font-family: 'Inter', sans-serif;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.7;
-  color: var(--text-muted);
+  color: rgba(252, 250, 246, 0.85);
   margin: 0;
 }
 
