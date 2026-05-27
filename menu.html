@@ -371,10 +371,10 @@
 
   <div class="nav-container">
     <div class="nav-brand">
-      <a href="/" class="logo-link"><img class="logo" src="/assets/site-menu-image-1.webp" alt="Roast &amp;amp; Roll"></img></a>
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-menu-image-1.webp" alt="Roast &amp;amp;amp; Roll"></img></a>
     </div>
 
-    <ul class="nav-menu" id="navMenu"><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li></ul>
+    <ul class="nav-menu" id="navMenu"><li><a href="/" data-i18n="nav-home">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li></ul>
 
     <div class="nav-cta-container">
       <a href="/contact" class="nav-cta-btn">Contact</a>
@@ -417,12 +417,12 @@
     // Check if background is transparent or rgba with 0 alpha
     const isTransparent = bgColor === 'transparent' || 
                          bgColor === 'rgba(0, 0, 0, 0)' ||
-                         (bgColor.startsWith('rgba') &amp;&amp; bgColor.includes(', 0)'));
+                         (bgColor.startsWith('rgba') &amp;amp;&amp;amp; bgColor.includes(', 0)'));
     
     if (isTransparent) {
       // Check for background-image or gradient
       const bgImage = computedStyle.backgroundImage;
-      if (bgImage &amp;&amp; bgImage !== 'none') {
+      if (bgImage &amp;amp;&amp;amp; bgImage !== 'none') {
         console.log('[Navbar] Navbar has background image/gradient, using dark text');
         bgColor = 'rgb(240, 240, 240)'; // Assume light background
       } else {
@@ -435,7 +435,7 @@
     
     // Calculate luminance to determine if background is light or dark
     const rgb = bgColor.match(/\d+/g);
-    if (rgb &amp;&amp; rgb.length &gt;= 3) {
+    if (rgb &amp;amp;&amp;amp; rgb.length &amp;gt;= 3) {
       const r = parseInt(rgb[0]);
       const g = parseInt(rgb[1]);
       const b = parseInt(rgb[2]);
@@ -593,7 +593,7 @@
       // ONLY apply inline positioning styles on mobile viewport
       // On desktop, the CSS handles hiding these buttons with display: none
       // Inline styles were breaking desktop layout by overriding CSS
-      const isMobileViewport = window.innerWidth &lt;= 768;
+      const isMobileViewport = window.innerWidth &amp;lt;= 768;
       
       if (mobileToggle) {
         // Icon sizing applies to all viewports for consistency
@@ -742,7 +742,7 @@
     var lastToggleTime = 0;
     function guardedToggle(e) {
       var now = Date.now();
-      if (now - lastToggleTime &lt; 300) return;
+      if (now - lastToggleTime &amp;lt; 300) return;
       lastToggleTime = now;
       handleToggle(e);
     }
@@ -803,7 +803,7 @@
       phoneBtn.addEventListener('click', function() {
         // Get phone number from placeholder in page or use default
         const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
-        const phoneNumber = phoneLinks.length &gt; 0 
+        const phoneNumber = phoneLinks.length &amp;gt; 0 
           ? phoneLinks[0].getAttribute('href').replace('tel:', '')
           : '[business_phone]';
         
@@ -838,8 +838,8 @@
     <!-- Centered heading block -->
     <div class="menu-intro-text">
       <p class="menu-intro-eyebrow">Our Menu</p>
-      <h1 class="menu-intro-heading">Handcrafted, Seasonal &amp;amp; Made with Care</h1>
-      <p class="menu-intro-body">At Roast &amp;amp; Roll, every cup and every bite begins with intention. Our menu is built around quality ingredients — sourced locally when the Colorado seasons allow — and shaped into approachable, everyday favorites you'll want to return to. From our signature espresso drinks to our freshly assembled sandwiches and house-baked pastries, this is artisan coffee and fresh pastries done the way we believe it should be: honest, warm, and genuinely good.</p>
+      <h1 class="menu-intro-heading">Handcrafted, Seasonal &amp;amp;amp; Made with Care</h1>
+      <p class="menu-intro-body">At Roast &amp;amp;amp; Roll, every cup and every bite begins with intention. Our menu is built around quality ingredients — sourced locally when the Colorado seasons allow — and shaped into approachable, everyday favorites you'll want to return to. From our signature espresso drinks to our freshly assembled sandwiches and house-baked pastries, this is artisan coffee and fresh pastries done the way we believe it should be: honest, warm, and genuinely good.</p>
     </div>
 
     <!-- Three-item highlight row -->
@@ -854,7 +854,7 @@
             <line x1="6" y1="28" x2="26" y2="28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line>
           </svg>
         </div>
-        <h3 class="menu-intro-highlight-title">Coffee &amp;amp; Espresso</h3>
+        <h3 class="menu-intro-highlight-title">Coffee &amp;amp;amp; Espresso</h3>
         <p class="menu-intro-highlight-desc">Single-origin beans, carefully pulled shots, and seasonal lattes crafted to order — every morning, every cup.</p>
       </div>
 
@@ -917,7 +917,7 @@
         </svg>
       </div>
       <h2 class="menu-services-title">Our Menu</h2>
-      <p class="menu-services-subtitle">Every item at Roast &amp;amp; Roll is handcrafted with care — from our single-origin espresso pulls to our freshly baked morning pastries. This is artisan coffee and fresh pastries done the Colorado way.</p>
+      <p class="menu-services-subtitle">Every item at Roast &amp;amp;amp; Roll is handcrafted with care — from our single-origin espresso pulls to our freshly baked morning pastries. This is artisan coffee and fresh pastries done the Colorado way.</p>
     </div>
 
     <div class="menu-services-grid">
@@ -925,18 +925,18 @@
       <!-- Coffee Beverages Card -->
       <article class="menu-services-card">
         <figure class="menu-services-card-figure">
-          <img loading="eager" fetchpriority="high" data-placeholder="menu-services-image-1" data-context="Artisan specialty coffee beverages on a rustic wooden café counter — a latte with intricate latte art, a pour-over drip coffee in a glass carafe, and a rich espresso shot in a ceramic demitasse cup. Warm natural light, Colorado mountain café atmosphere, clean and inviting." width="600" height="400" src="/assets/site-menu-services-image-1.webp" alt="Handcrafted specialty coffee beverages at Roast &amp;amp; Roll"></img>
+          <img loading="eager" fetchpriority="high" data-placeholder="menu-services-image-1" data-context="Artisan specialty coffee beverages on a rustic wooden café counter — a latte with intricate latte art, a pour-over drip coffee in a glass carafe, and a rich espresso shot in a ceramic demitasse cup. Warm natural light, Colorado mountain café atmosphere, clean and inviting." width="600" height="400" src="/assets/site-menu-services-image-1.webp" alt="Handcrafted specialty coffee beverages at Roast &amp;amp;amp; Roll"></img>
         </figure>
         <div class="menu-services-card-body">
           <span class="menu-services-card-label">Handcrafted Drinks</span>
           <h3 class="menu-services-card-title">Coffee Beverages</h3>
-          <p class="menu-services-card-desc">Our espresso bar is the beating heart of Roast &amp;amp; Roll. We pull single-origin shots, steam oat milk to a silky microfoam, and brew slow-drip pour-overs to order. Every cup is a small ritual.</p>
+          <p class="menu-services-card-desc">Our espresso bar is the beating heart of Roast &amp;amp;amp; Roll. We pull single-origin shots, steam oat milk to a silky microfoam, and brew slow-drip pour-overs to order. Every cup is a small ritual.</p>
           <ul class="menu-services-card-list">
-            <li>Signature Cortado &amp;amp; Flat White</li>
+            <li>Signature Cortado &amp;amp;amp; Flat White</li>
             <li>Seasonal Latte Specials</li>
-            <li>Cold Brew &amp;amp; Iced Pour-Over</li>
+            <li>Cold Brew &amp;amp;amp; Iced Pour-Over</li>
             <li>Single-Origin Drip Coffee</li>
-            <li>Matcha &amp;amp; Herbal Alternatives</li>
+            <li>Matcha &amp;amp;amp; Herbal Alternatives</li>
           </ul>
         </div>
       </article>
@@ -944,17 +944,17 @@
       <!-- Sandwiches Card -->
       <article class="menu-services-card">
         <figure class="menu-services-card-figure">
-          <img loading="lazy" decoding="async" data-placeholder="menu-services-image-2" data-context="Freshly made gourmet sandwiches on a wooden cutting board in a bright Colorado café kitchen — artisan sourdough bread with layers of roasted vegetables, quality deli meats, fresh greens, and house-made spreads. Natural daylight, appetizing and wholesome." width="600" height="400" src="/assets/site-menu-services-image-2.webp" alt="Freshly made artisan sandwiches at Roast &amp;amp; Roll"></img>
+          <img loading="lazy" decoding="async" data-placeholder="menu-services-image-2" data-context="Freshly made gourmet sandwiches on a wooden cutting board in a bright Colorado café kitchen — artisan sourdough bread with layers of roasted vegetables, quality deli meats, fresh greens, and house-made spreads. Natural daylight, appetizing and wholesome." width="600" height="400" src="/assets/site-menu-services-image-2.webp" alt="Freshly made artisan sandwiches at Roast &amp;amp;amp; Roll"></img>
         </figure>
         <div class="menu-services-card-body">
           <span class="menu-services-card-label">Made to Order</span>
           <h3 class="menu-services-card-title">Sandwich Selection</h3>
           <p class="menu-services-card-desc">Built on locally sourced bread and packed with thoughtful ingredients, our sandwiches are the kind of lunch you look forward to. Hearty enough to fuel a mountain day, refined enough for a slow afternoon at the counter.</p>
           <ul class="menu-services-card-list">
-            <li>Roasted Turkey &amp;amp; Avocado on Sourdough</li>
-            <li>Caprese with Basil Pesto &amp;amp; Burrata</li>
-            <li>Smoked Salmon &amp;amp; Cream Cheese Baguette</li>
-            <li>Roasted Veggie &amp;amp; Hummus Wrap</li>
+            <li>Roasted Turkey &amp;amp;amp; Avocado on Sourdough</li>
+            <li>Caprese with Basil Pesto &amp;amp;amp; Burrata</li>
+            <li>Smoked Salmon &amp;amp;amp; Cream Cheese Baguette</li>
+            <li>Roasted Veggie &amp;amp;amp; Hummus Wrap</li>
             <li>Classic BLT on House-Baked Focaccia</li>
           </ul>
         </div>
@@ -963,14 +963,14 @@
       <!-- Pastries Card -->
       <article class="menu-services-card">
         <figure class="menu-services-card-figure">
-          <img loading="lazy" decoding="async" data-placeholder="menu-services-image-3" data-context="Beautiful display of freshly baked artisan pastries in a boutique Colorado coffee shop — golden croissants, blueberry scones, almond tarts, and cinnamon morning buns arranged on a marble counter with soft morning light. Warm, inviting, and bakery-fresh aesthetic." width="600" height="400" src="/assets/site-menu-services-image-3.webp" alt="Freshly baked artisan pastries at Roast &amp;amp; Roll"></img>
+          <img loading="lazy" decoding="async" data-placeholder="menu-services-image-3" data-context="Beautiful display of freshly baked artisan pastries in a boutique Colorado coffee shop — golden croissants, blueberry scones, almond tarts, and cinnamon morning buns arranged on a marble counter with soft morning light. Warm, inviting, and bakery-fresh aesthetic." width="600" height="400" src="/assets/site-menu-services-image-3.webp" alt="Freshly baked artisan pastries at Roast &amp;amp;amp; Roll"></img>
         </figure>
         <div class="menu-services-card-body">
           <span class="menu-services-card-label">Baked Fresh Daily</span>
-          <h3 class="menu-services-card-title">Pastries &amp;amp; Baked Goods</h3>
+          <h3 class="menu-services-card-title">Pastries &amp;amp;amp; Baked Goods</h3>
           <p class="menu-services-card-desc">Our pastry case changes with the seasons and the baker's inspiration. Everything is made in small batches each morning — buttery, golden, and best enjoyed with a warm cup in hand. The best specialty coffee deserves equally good company.</p>
           <ul class="menu-services-card-list">
-            <li>Butter Croissants &amp;amp; Pain au Chocolat</li>
+            <li>Butter Croissants &amp;amp;amp; Pain au Chocolat</li>
             <li>Seasonal Fruit Scones</li>
             <li>Almond Frangipane Tart</li>
             <li>Cinnamon Morning Buns</li>
@@ -1011,9 +1011,9 @@
         <span class="menu-showcase-eyebrow">Made with Intention</span>
       </div>
 
-      <h2 class="menu-showcase-heading">From Bean to Bread,<br></br>Every Detail Counts</h2>
+      <h2 class="menu-showcase-heading">From Bean to Bread,<br></br><br></br>Every Detail Counts</h2>
 
-      <p class="menu-showcase-body">At Roast &amp;amp; Roll, we source our single-origin beans from small Colorado roasters who share our obsession with craft. Every espresso pull, every pour-over, every cold brew is prepared in small batches throughout the day — so the cup you hold is never stale, never rushed, always considered.</p>
+      <p class="menu-showcase-body">At Roast &amp;amp;amp; Roll, we source our single-origin beans from small Colorado roasters who share our obsession with craft. Every espresso pull, every pour-over, every cold brew is prepared in small batches throughout the day — so the cup you hold is never stale, never rushed, always considered.</p>
 
       <p class="menu-showcase-body">Our sandwiches and pastries follow the same philosophy. Bread arrives fresh each morning, fillings are prepped in-house, and our pastry case turns over by noon. It’s the kind of boutique counter experience where the person making your latte also knows which croissant just came out of the oven.</p>
 
@@ -1058,12 +1058,12 @@
 
       <!-- Top photo tile -->
       <figure class="menu-showcase-tile menu-showcase-tile--top">
-        <img loading="lazy" decoding="async" data-placeholder="menu-showcase-image-1" data-context="Artisan coffee shop counter scene: a barista's hands carefully pouring a latte with intricate rosette latte art into a ceramic cup, warm golden light, shallow depth of field, Colorado boutique café atmosphere, bright and editorial food photography style" width="560" height="380" src="/assets/site-menu-showcase-image-1.webp" alt="Barista crafting a latte with rosette art at the Roast &amp;amp; Roll counter" class="menu-showcase-img"></img>
+        <img loading="lazy" decoding="async" data-placeholder="menu-showcase-image-1" data-context="Artisan coffee shop counter scene: a barista's hands carefully pouring a latte with intricate rosette latte art into a ceramic cup, warm golden light, shallow depth of field, Colorado boutique café atmosphere, bright and editorial food photography style" width="560" height="380" src="/assets/site-menu-showcase-image-1.webp" alt="Barista crafting a latte with rosette art at the Roast &amp;amp;amp; Roll counter" class="menu-showcase-img"></img>
       </figure>
 
       <!-- Bottom photo tile -->
       <figure class="menu-showcase-tile menu-showcase-tile--bottom">
-        <img loading="lazy" decoding="async" data-placeholder="menu-showcase-image-2" data-context="Artisan bakery spread on a light wooden surface: freshly baked croissants, a rustic sandwich on sourdough bread, and a small pastry, warm natural light, top-down editorial food photography, Colorado boutique café, bright and airy with warm tones" width="560" height="340" src="/assets/site-menu-showcase-image-2.webp" alt="Freshly baked pastries and artisan sandwiches from Roast &amp;amp; Roll" class="menu-showcase-img"></img>
+        <img loading="lazy" decoding="async" data-placeholder="menu-showcase-image-2" data-context="Artisan bakery spread on a light wooden surface: freshly baked croissants, a rustic sandwich on sourdough bread, and a small pastry, warm natural light, top-down editorial food photography, Colorado boutique café, bright and airy with warm tones" width="560" height="340" src="/assets/site-menu-showcase-image-2.webp" alt="Freshly baked pastries and artisan sandwiches from Roast &amp;amp;amp; Roll" class="menu-showcase-img"></img>
       </figure>
     </div>
 
@@ -1082,7 +1082,7 @@
   <div class="menu-benefits-container">
     <div class="menu-benefits-header">
       <h2 class="menu-benefits-title">Why Guests Keep Coming Back</h2>
-      <p class="menu-benefits-subtitle">At Roast &amp;amp; Roll, every visit is crafted with intention — from the first sip to the last bite.</p>
+      <p class="menu-benefits-subtitle">At Roast &amp;amp;amp; Roll, every visit is crafted with intention — from the first sip to the last bite.</p>
     </div>
 
     <div class="menu-benefits-grid">
@@ -1131,7 +1131,7 @@
         </div>
         <div class="menu-benefit-content">
           <h3 class="menu-benefit-title">Your Reliable Daily Ritual</h3>
-          <p class="menu-benefit-desc">Open early, consistent in quality, and familiar in the best way. Whether it's your Monday morning flat white or a midweek lunch stop, Roast &amp;amp; Roll is dependably yours.</p>
+          <p class="menu-benefit-desc">Open early, consistent in quality, and familiar in the best way. Whether it's your Monday morning flat white or a midweek lunch stop, Roast &amp;amp;amp; Roll is dependably yours.</p>
         </div>
       </article>
 
@@ -1172,15 +1172,15 @@
         <line x1="30" y1="16" x2="48" y2="16" stroke="#C97A3D" stroke-width="1" opacity="0.6"></line>
       </svg>
     </div>
-    <h2 class="menu-contact-heading">Let's Talk Coffee &amp;amp; Good Things</h2>
+    <h2 class="menu-contact-heading">Let's Talk Coffee &amp;amp;amp; Good Things</h2>
     <p class="menu-contact-body">Whether you have questions about our current seasonal favorites, want to chat about a neighborhood collaboration, or simply want to know what's fresh out of the oven — we'd love to hear from you. Stop by, say hello, or reach out anytime.</p>
-    <p class="menu-contact-sub">Ask us about current menu specials, local partnerships, or what's brewing this week at Roast &amp;amp; Roll coffee shop.</p>
+    <p class="menu-contact-sub">Ask us about current menu specials, local partnerships, or what's brewing this week at Roast &amp;amp;amp; Roll coffee shop.</p>
     <a href="/contact" class="menu-contact-btn">Get in Touch</a>
   </div>
 </section>
   </main>
   
-  <footer class="site-footer" aria-label="Site Footer"><div class="footer-container"><div class="footer-top"><div class="footer-col footer-brand"><img src="/assets/roast-roll-food-beverage-logo.webp" alt="Roast &amp;amp; Roll" class="logo"></img><p class="footer-tagline">Handcrafted coffee and bold flavors brewed with Colorado heart. Every cup, every bite — made with care.</p><div class="footer-social" aria-label="Social media links"></div></div><div class="footer-col footer-links"><h3 class="footer-heading">Quick Links</h3><ul class="footer-nav" aria-label="Quick navigation links"><li><a href="/">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-hours"><h3 class="footer-heading">Hours</h3><ul class="hours-list" aria-label="Business hours"><li><a href="/"><span class="day">Mon – Fri</span><span class="time">7:00 AM – 7:00 PM</span></a></li><li><a href="/"><span class="day">Saturday</span><span class="time">8:00 AM – 6:00 PM</span></a></li><li><a href="/"><span class="day">Sunday</span><span class="time">9:00 AM – 4:00 PM</span></a></li></ul><span class="hours-badge"><i class="fas fa-leaf"></i> Fresh daily</span></div><div class="footer-col footer-contact-col"><h3 class="footer-heading">Contact</h3><ul class="footer-contact" aria-label="Contact information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div></div><div class="footer-bottom"><p class="footer-copyright">© 2026 Roast &amp;amp; Roll. All rights reserved.</p><div class="footer-legal" aria-label="Legal links"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp;amp; Conditions</a><a href="/accessibility">Accessibility</a><a href="https://zappy5.com" target="_blank" class="zappy-attribution" rel="noopener noreferrer">Generated by Zappy</a></div></div></div></footer>
+  <footer class="site-footer" aria-label="Site Footer"><div class="footer-container"><div class="footer-top"><div class="footer-col footer-brand"><img src="/assets/roast-roll-food-beverage-logo.webp" alt="Roast &amp;amp;amp; Roll" class="logo"></img><p class="footer-tagline">Handcrafted coffee and bold flavors brewed with Colorado heart. Every cup, every bite — made with care.</p><div class="footer-social" aria-label="Social media links"></div></div><div class="footer-col footer-links"><h3 class="footer-heading">Quick Links</h3><ul class="footer-nav" aria-label="Quick navigation links"><li><a href="/">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-hours"><h3 class="footer-heading">Hours</h3><ul class="hours-list" aria-label="Business hours"><li><a href="/"><span class="day">Mon – Fri</span><span class="time">7:00 AM – 7:00 PM</span></a></li><li><a href="/"><span class="day">Saturday</span><span class="time">8:00 AM – 6:00 PM</span></a></li><li><a href="/"><span class="day">Sunday</span><span class="time">9:00 AM – 4:00 PM</span></a></li></ul><span class="hours-badge"><i class="fas fa-leaf"></i> Fresh daily</span></div><div class="footer-col footer-contact-col"><h3 class="footer-heading">Contact</h3><ul class="footer-contact" aria-label="Contact information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div></div><div class="footer-bottom"><p class="footer-copyright">© 2026 Roast &amp;amp;amp; Roll. All rights reserved.</p><div class="footer-legal" aria-label="Legal links"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp;amp;amp; Conditions</a><a href="/accessibility">Accessibility</a><a href="https://zappy5.com" target="_blank" class="zappy-attribution" rel="noopener noreferrer">Generated by Zappy</a></div></div></div></footer>
   
   <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
     <i class="fab fa-whatsapp"></i>

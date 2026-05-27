@@ -371,10 +371,10 @@
 
   <div class="nav-container">
     <div class="nav-brand">
-      <a href="/" class="logo-link"><img class="logo" src="/assets/site-contact-image-1.webp" alt="Roast &amp;amp; Roll"></img></a>
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-contact-image-1.webp" alt="Roast &amp;amp;amp; Roll"></img></a>
     </div>
 
-    <ul class="nav-menu" id="navMenu"><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li></ul>
+    <ul class="nav-menu" id="navMenu"><li><a href="/" data-i18n="nav-home">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li></ul>
 
     <div class="nav-cta-container">
       <a href="/contact" class="nav-cta-btn">Contact</a>
@@ -417,12 +417,12 @@
     // Check if background is transparent or rgba with 0 alpha
     const isTransparent = bgColor === 'transparent' || 
                          bgColor === 'rgba(0, 0, 0, 0)' ||
-                         (bgColor.startsWith('rgba') &amp;&amp; bgColor.includes(', 0)'));
+                         (bgColor.startsWith('rgba') &amp;amp;&amp;amp; bgColor.includes(', 0)'));
     
     if (isTransparent) {
       // Check for background-image or gradient
       const bgImage = computedStyle.backgroundImage;
-      if (bgImage &amp;&amp; bgImage !== 'none') {
+      if (bgImage &amp;amp;&amp;amp; bgImage !== 'none') {
         console.log('[Navbar] Navbar has background image/gradient, using dark text');
         bgColor = 'rgb(240, 240, 240)'; // Assume light background
       } else {
@@ -435,7 +435,7 @@
     
     // Calculate luminance to determine if background is light or dark
     const rgb = bgColor.match(/\d+/g);
-    if (rgb &amp;&amp; rgb.length &gt;= 3) {
+    if (rgb &amp;amp;&amp;amp; rgb.length &amp;gt;= 3) {
       const r = parseInt(rgb[0]);
       const g = parseInt(rgb[1]);
       const b = parseInt(rgb[2]);
@@ -593,7 +593,7 @@
       // ONLY apply inline positioning styles on mobile viewport
       // On desktop, the CSS handles hiding these buttons with display: none
       // Inline styles were breaking desktop layout by overriding CSS
-      const isMobileViewport = window.innerWidth &lt;= 768;
+      const isMobileViewport = window.innerWidth &amp;lt;= 768;
       
       if (mobileToggle) {
         // Icon sizing applies to all viewports for consistency
@@ -742,7 +742,7 @@
     var lastToggleTime = 0;
     function guardedToggle(e) {
       var now = Date.now();
-      if (now - lastToggleTime &lt; 300) return;
+      if (now - lastToggleTime &amp;lt; 300) return;
       lastToggleTime = now;
       handleToggle(e);
     }
@@ -803,7 +803,7 @@
       phoneBtn.addEventListener('click', function() {
         // Get phone number from placeholder in page or use default
         const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
-        const phoneNumber = phoneLinks.length &gt; 0 
+        const phoneNumber = phoneLinks.length &amp;gt; 0 
           ? phoneLinks[0].getAttribute('href').replace('tel:', '')
           : '[business_phone]';
         
@@ -841,7 +841,7 @@
     <!-- Centered intro text -->
     <div class="contact-intro-text">
       <h1 class="contact-intro-heading">Come Say Hello</h1>
-      <p class="contact-intro-lead">We'd love to hear from you — whether you have a question about our menu, want to plan a visit to our Colorado shop, or simply want to share your Roast &amp;amp; Roll moment. Stop by, reach out, and let's connect over something freshly made.</p>
+      <p class="contact-intro-lead">We'd love to hear from you — whether you have a question about our menu, want to plan a visit to our Colorado shop, or simply want to share your Roast &amp;amp;amp; Roll moment. Stop by, reach out, and let's connect over something freshly made.</p>
     </div>
 
     <!-- Horizontal info blocks -->
@@ -943,7 +943,7 @@
             <div class="privacy-consent">
               <label class="privacy-consent-label">
                 <input type="checkbox" name="privacy_consent" class="privacy-consent-checkbox" required=""></input>
-                <span>I have read and agree to the <a href="/terms" target="_blank">Terms &amp;amp; Conditions</a> and <a href="/privacy" target="_blank">Privacy Policy</a></span>
+                <span>I have read and agree to the <a href="/terms" target="_blank">Terms &amp;amp;amp; Conditions</a> and <a href="/privacy" target="_blank">Privacy Policy</a></span>
               </label>
             </div>
 
@@ -956,7 +956,7 @@
       <!-- IMAGE COLUMN -->
       <div class="ccf-image-col">
         <div class="ccf-image-wrap">
-          <img loading="eager" fetchpriority="high" data-placeholder="contact-contact-form-image-1" data-context="Bright, warmly lit artisan coffee shop counter scene at Roast &amp;amp; Roll in Colorado. A barista" s="" hands="" pour="" a="" latte="" with="" beautiful="" art="" into="" ceramic="" mug.="" the="" counter="" is="" styled="" small="" vase="" of="" wildflowers,="" pastry="" display="" case="" showing="" croissants="" and="" muffins,="" warm="" wood="" surfaces.="" natural="" window="" light="" floods="" scene,="" creating="" cozy="" boutique="" café="" atmosphere.="" color="" palette:="" creams,="" browns,="" sage="" greens.'="" width="600" height="750" src="/assets/site-contact-contact-form-image-1.webp" alt="Barista crafting latte art at the Roast &amp;amp; Roll coffee counter in Colorado"></img>
+          <img loading="eager" fetchpriority="high" data-placeholder="contact-contact-form-image-1" data-context="Bright, warmly lit artisan coffee shop counter scene at Roast &amp;amp;amp; Roll in Colorado. A barista" s="" hands="" pour="" a="" latte="" with="" beautiful="" art="" into="" ceramic="" mug.="" the="" counter="" is="" styled="" small="" vase="" of="" wildflowers,="" pastry="" display="" case="" showing="" croissants="" and="" muffins,="" warm="" wood="" surfaces.="" natural="" window="" light="" floods="" scene,="" creating="" cozy="" boutique="" café="" atmosphere.="" color="" palette:="" creams,="" browns,="" sage="" greens.'="" width="600" height="750" src="/assets/site-contact-contact-form-image-1.webp" alt="Barista crafting latte art at the Roast &amp;amp;amp; Roll coffee counter in Colorado"></img>
           <div class="ccf-image-accent" aria-hidden="true">
             <svg data-no-icon-edit="true" aria-hidden="true" width="48" height="48" viewbox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M24 4 C24 4, 28 14, 38 16 C28 18, 24 28, 24 28 C24 28, 20 18, 10 16 C20 14, 24 4 24 4Z" fill="var(--accent)" opacity="0.7"></path>
@@ -993,7 +993,7 @@
         </svg>
       </div>
       <h2 class="contact-locations-title">Come Find Us in Colorado</h2>
-      <p class="contact-locations-subtitle">Roast &amp;amp; Roll is your neighborhood spot for handcrafted coffee, freshly made sandwiches, and warm pastries. No reservations needed — just walk in and make yourself at home.</p>
+      <p class="contact-locations-subtitle">Roast &amp;amp;amp; Roll is your neighborhood spot for handcrafted coffee, freshly made sandwiches, and warm pastries. No reservations needed — just walk in and make yourself at home.</p>
     </div>
 
     <!-- Two-Column Card Pair -->
@@ -1010,7 +1010,7 @@
               <circle cx="14" cy="10" r="2" stroke="currentColor" stroke-width="1.5"></circle>
             </svg>
           </div>
-          <span class="contact-locations-card-label">Inside Roast &amp;amp; Roll</span>
+          <span class="contact-locations-card-label">Inside Roast &amp;amp;amp; Roll</span>
         </div>
         <h3 class="contact-locations-card-title">A Space That Feels Like Yours</h3>
         <p class="contact-locations-card-body">Step inside and you'll find warm wood tones, soft natural light, and the unhurried pace of a proper Colorado morning. Our space is intentionally intimate — a handful of tables, a welcoming counter, and the kind of quiet that makes it easy to linger over your latte or catch up with a friend.</p>
@@ -1020,7 +1020,7 @@
               <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"></circle>
               <path d="M8 4.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path>
             </svg>
-            <span><strong>Hours:</strong> Mon–Fri 6:30 am – 5 pm &amp;nbsp;|&amp;nbsp; Sat–Sun 7 am – 4 pm</span>
+            <span><strong>Hours:</strong> Mon–Fri 6:30 am – 5 pm &amp;amp;nbsp;|&amp;amp;nbsp; Sat–Sun 7 am – 4 pm</span>
           </li>
           <li>
             <svg data-element-type="icon" data-icon-type="svg" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1042,7 +1042,7 @@
               <path d="M3 13V7l5-4 5 4v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
               <rect x="6" y="9" width="4" height="4" rx="0.5" stroke="currentColor" stroke-width="1.2"></rect>
             </svg>
-            <span>Dine in, take away, or grab &amp;amp; go</span>
+            <span>Dine in, take away, or grab &amp;amp;amp; go</span>
           </li>
         </ul>
         
@@ -1062,7 +1062,7 @@
           <span class="contact-locations-card-label">Our Neighborhood</span>
         </div>
         <h3 class="contact-locations-card-title">Rooted in the Community</h3>
-        <p class="contact-locations-card-body">We chose our corner of Colorado deliberately. Surrounded by local shops, tree-lined streets, and a community that values the handmade and the unhurried, Roast &amp;amp; Roll is easy to reach whether you're walking, cycling, or popping in between errands. We're proud to be part of the daily rhythm of this neighborhood.</p>
+        <p class="contact-locations-card-body">We chose our corner of Colorado deliberately. Surrounded by local shops, tree-lined streets, and a community that values the handmade and the unhurried, Roast &amp;amp;amp; Roll is easy to reach whether you're walking, cycling, or popping in between errands. We're proud to be part of the daily rhythm of this neighborhood.</p>
         <ul class="contact-locations-detail-list">
           <li>
             <svg data-element-type="icon" data-icon-type="svg" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1126,7 +1126,7 @@
 
   <div class="contact-cta-section__container">
     <h2 class="contact-cta-section__heading">Come Find Your Perfect Cup</h2>
-    <p class="contact-cta-section__body">Whether you're craving artisan coffee and fresh pastries or browsing our handcrafted sandwiches, Roast &amp;amp; Roll is your cozy Colorado corner. Explore what we have to offer — then come say hello.</p>
+    <p class="contact-cta-section__body">Whether you're craving artisan coffee and fresh pastries or browsing our handcrafted sandwiches, Roast &amp;amp;amp; Roll is your cozy Colorado corner. Explore what we have to offer — then come say hello.</p>
     <div class="contact-cta-section__actions">
       <a href="/" class="contact-cta-section__btn contact-cta-section__btn--primary">Explore Our Story</a>
       <a href="/menu" class="contact-cta-section__btn contact-cta-section__btn--secondary">Browse the Menu</a>
@@ -1135,7 +1135,7 @@
 </section>
   </main>
   
-  <footer class="site-footer" aria-label="Site Footer"><div class="footer-container"><div class="footer-top"><div class="footer-col footer-brand"><img src="/assets/roast-roll-food-beverage-logo.webp" alt="Roast &amp;amp; Roll" class="logo"></img><p class="footer-tagline">Handcrafted coffee and bold flavors brewed with Colorado heart. Every cup, every bite — made with care.</p><div class="footer-social" aria-label="Social media links"></div></div><div class="footer-col footer-links"><h3 class="footer-heading">Quick Links</h3><ul class="footer-nav" aria-label="Quick navigation links"><li><a href="/">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-hours"><h3 class="footer-heading">Hours</h3><ul class="hours-list" aria-label="Business hours"><li><a href="/"><span class="day">Mon – Fri</span><span class="time">7:00 AM – 7:00 PM</span></a></li><li><a href="/"><span class="day">Saturday</span><span class="time">8:00 AM – 6:00 PM</span></a></li><li><a href="/"><span class="day">Sunday</span><span class="time">9:00 AM – 4:00 PM</span></a></li></ul><span class="hours-badge"><i class="fas fa-leaf"></i> Fresh daily</span></div><div class="footer-col footer-contact-col"><h3 class="footer-heading">Contact</h3><ul class="footer-contact" aria-label="Contact information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div></div><div class="footer-bottom"><p class="footer-copyright">© 2026 Roast &amp;amp; Roll. All rights reserved.</p><div class="footer-legal" aria-label="Legal links"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp;amp; Conditions</a><a href="/accessibility">Accessibility</a><a href="https://zappy5.com" target="_blank" class="zappy-attribution" rel="noopener noreferrer">Generated by Zappy</a></div></div></div></footer>
+  <footer class="site-footer" aria-label="Site Footer"><div class="footer-container"><div class="footer-top"><div class="footer-col footer-brand"><img src="/assets/roast-roll-food-beverage-logo.webp" alt="Roast &amp;amp;amp; Roll" class="logo"></img><p class="footer-tagline">Handcrafted coffee and bold flavors brewed with Colorado heart. Every cup, every bite — made with care.</p><div class="footer-social" aria-label="Social media links"></div></div><div class="footer-col footer-links"><h3 class="footer-heading">Quick Links</h3><ul class="footer-nav" aria-label="Quick navigation links"><li><a href="/">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-hours"><h3 class="footer-heading">Hours</h3><ul class="hours-list" aria-label="Business hours"><li><a href="/"><span class="day">Mon – Fri</span><span class="time">7:00 AM – 7:00 PM</span></a></li><li><a href="/"><span class="day">Saturday</span><span class="time">8:00 AM – 6:00 PM</span></a></li><li><a href="/"><span class="day">Sunday</span><span class="time">9:00 AM – 4:00 PM</span></a></li></ul><span class="hours-badge"><i class="fas fa-leaf"></i> Fresh daily</span></div><div class="footer-col footer-contact-col"><h3 class="footer-heading">Contact</h3><ul class="footer-contact" aria-label="Contact information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div></div><div class="footer-bottom"><p class="footer-copyright">© 2026 Roast &amp;amp;amp; Roll. All rights reserved.</p><div class="footer-legal" aria-label="Legal links"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp;amp;amp; Conditions</a><a href="/accessibility">Accessibility</a><a href="https://zappy5.com" target="_blank" class="zappy-attribution" rel="noopener noreferrer">Generated by Zappy</a></div></div></div></footer>
   
   <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
     <i class="fab fa-whatsapp"></i>

@@ -371,10 +371,10 @@
 
   <div class="nav-container">
     <div class="nav-brand">
-      <a href="/" class="logo-link"><img class="logo" src="/assets/site-about-image-1.webp" alt="Roast &amp;amp; Roll"></img></a>
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-about-image-1.webp" alt="Roast &amp;amp;amp; Roll"></img></a>
     </div>
 
-    <ul class="nav-menu" id="navMenu"><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li></ul>
+    <ul class="nav-menu" id="navMenu"><li><a href="/" data-i18n="nav-home">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li></ul>
 
     <div class="nav-cta-container">
       <a href="/contact" class="nav-cta-btn">Contact</a>
@@ -417,12 +417,12 @@
     // Check if background is transparent or rgba with 0 alpha
     const isTransparent = bgColor === 'transparent' || 
                          bgColor === 'rgba(0, 0, 0, 0)' ||
-                         (bgColor.startsWith('rgba') &amp;&amp; bgColor.includes(', 0)'));
+                         (bgColor.startsWith('rgba') &amp;amp;&amp;amp; bgColor.includes(', 0)'));
     
     if (isTransparent) {
       // Check for background-image or gradient
       const bgImage = computedStyle.backgroundImage;
-      if (bgImage &amp;&amp; bgImage !== 'none') {
+      if (bgImage &amp;amp;&amp;amp; bgImage !== 'none') {
         console.log('[Navbar] Navbar has background image/gradient, using dark text');
         bgColor = 'rgb(240, 240, 240)'; // Assume light background
       } else {
@@ -435,7 +435,7 @@
     
     // Calculate luminance to determine if background is light or dark
     const rgb = bgColor.match(/\d+/g);
-    if (rgb &amp;&amp; rgb.length &gt;= 3) {
+    if (rgb &amp;amp;&amp;amp; rgb.length &amp;gt;= 3) {
       const r = parseInt(rgb[0]);
       const g = parseInt(rgb[1]);
       const b = parseInt(rgb[2]);
@@ -593,7 +593,7 @@
       // ONLY apply inline positioning styles on mobile viewport
       // On desktop, the CSS handles hiding these buttons with display: none
       // Inline styles were breaking desktop layout by overriding CSS
-      const isMobileViewport = window.innerWidth &lt;= 768;
+      const isMobileViewport = window.innerWidth &amp;lt;= 768;
       
       if (mobileToggle) {
         // Icon sizing applies to all viewports for consistency
@@ -742,7 +742,7 @@
     var lastToggleTime = 0;
     function guardedToggle(e) {
       var now = Date.now();
-      if (now - lastToggleTime &lt; 300) return;
+      if (now - lastToggleTime &amp;lt; 300) return;
       lastToggleTime = now;
       handleToggle(e);
     }
@@ -803,7 +803,7 @@
       phoneBtn.addEventListener('click', function() {
         // Get phone number from placeholder in page or use default
         const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
-        const phoneNumber = phoneLinks.length &gt; 0 
+        const phoneNumber = phoneLinks.length &amp;gt; 0 
           ? phoneLinks[0].getAttribute('href').replace('tel:', '')
           : '[business_phone]';
         
@@ -838,9 +838,9 @@
       <h1 class="about-story-heading">Brewed in Colorado,
 Built on Community</h1>
 
-      <p class="about-story-intro">Roast &amp;amp; Roll was born from a simple belief: that a great cup of coffee and a freshly made sandwich can anchor your whole day. We opened our doors in the heart of Colorado with a commitment to sourcing exceptional beans, baking pastries by hand each morning, and crafting every beverage with unhurried care. This isn't fast coffee — it's the kind you linger over.</p>
+      <p class="about-story-intro">Roast &amp;amp;amp; Roll was born from a simple belief: that a great cup of coffee and a freshly made sandwich can anchor your whole day. We opened our doors in the heart of Colorado with a commitment to sourcing exceptional beans, baking pastries by hand each morning, and crafting every beverage with unhurried care. This isn't fast coffee — it's the kind you linger over.</p>
 
-      <p class="about-story-body">We're proud to be a neighborhood fixture, a place where regulars are greeted by name and first-timers feel immediately at home. From the first crack of dawn to the last afternoon lull, Roast &amp;amp; Roll is woven into the small daily rituals that make a community feel like one. Whether you're grabbing a cortado before a hike or settling in with a croissant and your laptop, you belong here.</p>
+      <p class="about-story-body">We're proud to be a neighborhood fixture, a place where regulars are greeted by name and first-timers feel immediately at home. From the first crack of dawn to the last afternoon lull, Roast &amp;amp;amp; Roll is woven into the small daily rituals that make a community feel like one. Whether you're grabbing a cortado before a hike or settling in with a croissant and your laptop, you belong here.</p>
 
       <div class="about-story-signature">
         <svg data-no-icon-edit="true" aria-hidden="true" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; margin-right:8px;">
@@ -848,14 +848,14 @@ Built on Community</h1>
           <path d="M12 16 L12 21" stroke="var(--accent)" stroke-width="1.2"></path>
           <path d="M9 21 L15 21" stroke="var(--accent)" stroke-width="1.2"></path>
         </svg>
-        <span class="about-story-sig-text">The Roast &amp;amp; Roll Team, Colorado</span>
+        <span class="about-story-sig-text">The Roast &amp;amp;amp; Roll Team, Colorado</span>
       </div>
     </div>
 
     <!-- Image Column -->
     <figure class="about-story-figure">
       <div class="about-story-img-wrapper">
-        <img loading="eager" fetchpriority="high" data-placeholder="about-story-image-1" data-context="A tall portrait-style photograph of the interior of a warm, boutique Colorado coffee shop. Soft morning light streams through large windows onto a rustic wooden counter where a skilled barista carefully pours latte art into a ceramic cup. Shelves hold glass jars of coffee beans, small potted plants, and handwritten chalkboard menus. The atmosphere is cozy, intimate, and artisanal — warm amber tones, exposed brick, and a calm neighborhood energy." width="560" height="720" src="/assets/site-about-story-image-1.webp" alt="Barista crafting a handcrafted latte inside the cozy Roast &amp;amp; Roll coffee shop in Colorado"></img>
+        <img loading="eager" fetchpriority="high" data-placeholder="about-story-image-1" data-context="A tall portrait-style photograph of the interior of a warm, boutique Colorado coffee shop. Soft morning light streams through large windows onto a rustic wooden counter where a skilled barista carefully pours latte art into a ceramic cup. Shelves hold glass jars of coffee beans, small potted plants, and handwritten chalkboard menus. The atmosphere is cozy, intimate, and artisanal — warm amber tones, exposed brick, and a calm neighborhood energy." width="560" height="720" src="/assets/site-about-story-image-1.webp" alt="Barista crafting a handcrafted latte inside the cozy Roast &amp;amp;amp; Roll coffee shop in Colorado"></img>
       </div>
       <figcaption class="about-story-figcaption">Handcrafted, every single morning.</figcaption>
     </figure>
@@ -884,7 +884,7 @@ Built on Community</h1>
         </svg>
       </div>
       <h2 class="about-values-title">What We Stand For</h2>
-      <p class="about-values-subtitle">At Roast &amp;amp; Roll, every cup brewed and every pastry pulled from the oven is guided by four principles we refuse to compromise on. These aren't just values — they're the daily practice behind our artisan coffee and fresh handcrafted food.</p>
+      <p class="about-values-subtitle">At Roast &amp;amp;amp; Roll, every cup brewed and every pastry pulled from the oven is guided by four principles we refuse to compromise on. These aren't just values — they're the daily practice behind our artisan coffee and fresh handcrafted food.</p>
     </div>
 
     <!-- Values Grid -->
@@ -949,7 +949,7 @@ Built on Community</h1>
         </div>
         <div class="about-values-card-content">
           <h3 class="about-values-card-title">Colorado Roots</h3>
-          <p class="about-values-card-text">We're proudly planted in this community. We partner with local roasters, growers, and makers whose values match our own. When you support Roast &amp;amp; Roll, you're supporting the broader neighborhood ecosystem that makes Colorado's food culture so worth celebrating.</p>
+          <p class="about-values-card-text">We're proudly planted in this community. We partner with local roasters, growers, and makers whose values match our own. When you support Roast &amp;amp;amp; Roll, you're supporting the broader neighborhood ecosystem that makes Colorado's food culture so worth celebrating.</p>
         </div>
       </article>
 
@@ -980,7 +980,7 @@ Built on Community</h1>
         </svg>
       </div>
       <h2 class="about-portfolio-title">Crafted with Care, Every Single Day</h2>
-      <p class="about-portfolio-subtitle">Step inside Roast &amp;amp; Roll and you'll find the kind of unhurried attention that makes artisan coffee and fresh pastries worth the trip. Every cup, every sandwich, every pastry starts at the hands of someone who genuinely loves what they do.</p>
+      <p class="about-portfolio-subtitle">Step inside Roast &amp;amp;amp; Roll and you'll find the kind of unhurried attention that makes artisan coffee and fresh pastries worth the trip. Every cup, every sandwich, every pastry starts at the hands of someone who genuinely loves what they do.</p>
     </div>
 
     <!-- Masonry Grid -->
@@ -988,7 +988,7 @@ Built on Community</h1>
 
       <!-- Large image: left/start -->
       <figure class="about-portfolio-figure about-portfolio-figure--large">
-        <img loading="lazy" decoding="async" data-placeholder="about-portfolio-image-1" data-context="Warm natural-light photograph of a barista at a wooden counter in a cozy Colorado boutique coffee shop, carefully crafting a latte art pour into a ceramic cup. The counter is beautifully arranged with small potted herbs, a hand-grinder, and warm ambient lighting. Airy, editorial style with soft shadows." width="700" height="860" src="/assets/site-about-portfolio-image-1.webp" alt="Barista crafting latte art at the Roast &amp;amp; Roll counter"></img>
+        <img loading="lazy" decoding="async" data-placeholder="about-portfolio-image-1" data-context="Warm natural-light photograph of a barista at a wooden counter in a cozy Colorado boutique coffee shop, carefully crafting a latte art pour into a ceramic cup. The counter is beautifully arranged with small potted herbs, a hand-grinder, and warm ambient lighting. Airy, editorial style with soft shadows." width="700" height="860" src="/assets/site-about-portfolio-image-1.webp" alt="Barista crafting latte art at the Roast &amp;amp;amp; Roll counter"></img>
         <figcaption class="about-portfolio-caption">Counter Craft</figcaption>
       </figure>
 
@@ -996,12 +996,12 @@ Built on Community</h1>
       <div class="about-portfolio-stack">
 
         <figure class="about-portfolio-figure about-portfolio-figure--medium">
-          <img loading="lazy" decoding="async" data-placeholder="about-portfolio-image-2" data-context="Close-up natural-light food photography of freshly baked pastries — croissants, morning buns, and a fruit danish — arranged on a white marble tray in a boutique Colorado café. Soft shadows, warm tones, airy editorial composition." width="560" height="400" src="/assets/site-about-portfolio-image-2.webp" alt="Freshly baked pastries arranged on a marble tray at Roast &amp;amp; Roll"></img>
+          <img loading="lazy" decoding="async" data-placeholder="about-portfolio-image-2" data-context="Close-up natural-light food photography of freshly baked pastries — croissants, morning buns, and a fruit danish — arranged on a white marble tray in a boutique Colorado café. Soft shadows, warm tones, airy editorial composition." width="560" height="400" src="/assets/site-about-portfolio-image-2.webp" alt="Freshly baked pastries arranged on a marble tray at Roast &amp;amp;amp; Roll"></img>
           <figcaption class="about-portfolio-caption">Morning Pastries</figcaption>
         </figure>
 
         <figure class="about-portfolio-figure about-portfolio-figure--medium">
-          <img loading="lazy" decoding="async" data-placeholder="about-portfolio-image-3" data-context="Natural-light photograph of a welcoming, warmly lit interior of a boutique Colorado coffee shop — exposed wood shelves, ceramic mugs, a chalkboard menu, and a couple of guests enjoying coffee at a small table by a window. Airy, cozy, editorial feel." width="560" height="400" src="/assets/site-about-portfolio-image-3.webp" alt="Welcoming interior of Roast &amp;amp; Roll coffee shop in Colorado"></img>
+          <img loading="lazy" decoding="async" data-placeholder="about-portfolio-image-3" data-context="Natural-light photograph of a welcoming, warmly lit interior of a boutique Colorado coffee shop — exposed wood shelves, ceramic mugs, a chalkboard menu, and a couple of guests enjoying coffee at a small table by a window. Airy, cozy, editorial feel." width="560" height="400" src="/assets/site-about-portfolio-image-3.webp" alt="Welcoming interior of Roast &amp;amp;amp; Roll coffee shop in Colorado"></img>
           <figcaption class="about-portfolio-caption">Our Corner</figcaption>
         </figure>
 
@@ -1025,7 +1025,7 @@ Built on Community</h1>
     <!-- Section Header -->
     <div class="about-reviews-header">
       <h2 class="about-reviews-title">What Our Neighbors Are Saying</h2>
-      <p class="about-reviews-intro">From first-timers to familiar faces who've made us part of their morning ritual — the Roast &amp;amp; Roll community keeps coming back for the craft, the warmth, and the flavors that feel like home. Here's what a few of our regulars have to share.</p>
+      <p class="about-reviews-intro">From first-timers to familiar faces who've made us part of their morning ritual — the Roast &amp;amp;amp; Roll community keeps coming back for the craft, the warmth, and the flavors that feel like home. Here's what a few of our regulars have to share.</p>
     </div>
 
     <!-- Review Cards -->
@@ -1065,7 +1065,7 @@ Built on Community</h1>
             <span aria-hidden="true">★★★★★</span>
           </div>
           <strong class="about-review-name">Diego R.</strong>
-          <span class="about-review-descriptor">Food Blogger &amp;amp; Weekend Wanderer</span>
+          <span class="about-review-descriptor">Food Blogger &amp;amp;amp; Weekend Wanderer</span>
         </footer>
       </article>
 
@@ -1076,7 +1076,7 @@ Built on Community</h1>
           </svg>
         </div>
         <blockquote class="about-review-quote">
-          <p>There's a consistency here that's rare. Whether it's a Tuesday morning or a busy Saturday, the quality never wavers. The baristas remember my order, the almond croissant is always perfectly laminated. Roast &amp;amp; Roll is genuinely part of our neighborhood now.</p>
+          <p>There's a consistency here that's rare. Whether it's a Tuesday morning or a busy Saturday, the quality never wavers. The baristas remember my order, the almond croissant is always perfectly laminated. Roast &amp;amp;amp; Roll is genuinely part of our neighborhood now.</p>
         </blockquote>
         <div class="about-review-separator" aria-hidden="true"></div>
         <footer class="about-review-author">
@@ -1128,7 +1128,7 @@ Built on Community</h1>
 
     <div class="about-cta-content">
       <h2 class="about-cta-heading">Come Find Us in Colorado</h2>
-      <p class="about-cta-body">Whether you're curious about our craft, looking for a warm corner to settle into, or want to connect with us for a community event — we'd love to hear from you. Roast &amp;amp; Roll is more than a coffee shop; it's a gathering place, and our door is always open.</p>
+      <p class="about-cta-body">Whether you're curious about our craft, looking for a warm corner to settle into, or want to connect with us for a community event — we'd love to hear from you. Roast &amp;amp;amp; Roll is more than a coffee shop; it's a gathering place, and our door is always open.</p>
 
       <div class="about-cta-actions">
         <a href="/contact" class="about-cta-btn-primary">Get in Touch</a>
@@ -1140,7 +1140,7 @@ Built on Community</h1>
 </section>
   </main>
   
-  <footer class="site-footer" aria-label="Site Footer"><div class="footer-container"><div class="footer-top"><div class="footer-col footer-brand"><img src="/assets/roast-roll-food-beverage-logo.webp" alt="Roast &amp;amp; Roll" class="logo"></img><p class="footer-tagline">Handcrafted coffee and bold flavors brewed with Colorado heart. Every cup, every bite — made with care.</p><div class="footer-social" aria-label="Social media links"></div></div><div class="footer-col footer-links"><h3 class="footer-heading">Quick Links</h3><ul class="footer-nav" aria-label="Quick navigation links"><li><a href="/">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-hours"><h3 class="footer-heading">Hours</h3><ul class="hours-list" aria-label="Business hours"><li><a href="/"><span class="day">Mon – Fri</span><span class="time">7:00 AM – 7:00 PM</span></a></li><li><a href="/"><span class="day">Saturday</span><span class="time">8:00 AM – 6:00 PM</span></a></li><li><a href="/"><span class="day">Sunday</span><span class="time">9:00 AM – 4:00 PM</span></a></li></ul><span class="hours-badge"><i class="fas fa-leaf"></i> Fresh daily</span></div><div class="footer-col footer-contact-col"><h3 class="footer-heading">Contact</h3><ul class="footer-contact" aria-label="Contact information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div></div><div class="footer-bottom"><p class="footer-copyright">© 2026 Roast &amp;amp; Roll. All rights reserved.</p><div class="footer-legal" aria-label="Legal links"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp;amp; Conditions</a><a href="/accessibility">Accessibility</a><a href="https://zappy5.com" target="_blank" class="zappy-attribution" rel="noopener noreferrer">Generated by Zappy</a></div></div></div></footer>
+  <footer class="site-footer" aria-label="Site Footer"><div class="footer-container"><div class="footer-top"><div class="footer-col footer-brand"><img src="/assets/roast-roll-food-beverage-logo.webp" alt="Roast &amp;amp;amp; Roll" class="logo"></img><p class="footer-tagline">Handcrafted coffee and bold flavors brewed with Colorado heart. Every cup, every bite — made with care.</p><div class="footer-social" aria-label="Social media links"></div></div><div class="footer-col footer-links"><h3 class="footer-heading">Quick Links</h3><ul class="footer-nav" aria-label="Quick navigation links"><li><a href="/">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-hours"><h3 class="footer-heading">Hours</h3><ul class="hours-list" aria-label="Business hours"><li><a href="/"><span class="day">Mon – Fri</span><span class="time">7:00 AM – 7:00 PM</span></a></li><li><a href="/"><span class="day">Saturday</span><span class="time">8:00 AM – 6:00 PM</span></a></li><li><a href="/"><span class="day">Sunday</span><span class="time">9:00 AM – 4:00 PM</span></a></li></ul><span class="hours-badge"><i class="fas fa-leaf"></i> Fresh daily</span></div><div class="footer-col footer-contact-col"><h3 class="footer-heading">Contact</h3><ul class="footer-contact" aria-label="Contact information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div></div><div class="footer-bottom"><p class="footer-copyright">© 2026 Roast &amp;amp;amp; Roll. All rights reserved.</p><div class="footer-legal" aria-label="Legal links"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp;amp;amp; Conditions</a><a href="/accessibility">Accessibility</a><a href="https://zappy5.com" target="_blank" class="zappy-attribution" rel="noopener noreferrer">Generated by Zappy</a></div></div></div></footer>
   
   <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
     <i class="fab fa-whatsapp"></i>
