@@ -9,7 +9,7 @@ Source: https://example.com
 ## Stay Awhile — Roast & Roll
 
 URL: https://example.com
-Description: Discover Colorado coziest boutique café. Roast &amp; Roll serves handcrafted specialty coffee, fresh pastries, and artisan sandwiches made with love. Visit us today!
+Description: Discover Colorado&#39;s coziest boutique café. Roast &amp; Roll serves handcrafted specialty coffee, fresh pastries, and artisan sandwiches made with love. Visit us today!
 
 Stay Awhile — Roast & Roll
 
