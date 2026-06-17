@@ -7,33 +7,33 @@
 ## Pages
 
 ### Home
-https://example.com
+https://roast-roll.zappy5.app
 Discover Colorado&#39;s coziest boutique café. Roast &amp; Roll serves handcrafted specialty coffee, fresh pastries, and artisan sandwiches made with love. Visit us today!
 
 ### Menu
-https://example.com/menu
+https://roast-roll.zappy5.app/menu
 Explore our curated menu of handcrafted coffee beverages, freshly baked pastries, and artisan sandwiches. Find your new favorite order at Roast &amp; Roll — quality in every bite.
 
 ### About
-https://example.com/about
+https://roast-roll.zappy5.app/about
 Meet the passionate team behind Roast &amp; Roll, Colorado&#39;s beloved boutique café. Learn how our commitment to quality, craft, and community shapes every cup and every bite we serve.
 
 ### Contact
-https://example.com/contact
+https://roast-roll.zappy5.app/contact
 Looking for the best specialty coffee and sandwiches near you? Get directions, hours, and reach out to Roast &amp; Roll. We&#39;d love to welcome you into our cozy Colorado café.
 
 ## Legal & Policy
 
 ### Privacy Policy
-https://example.com/privacy
+https://roast-roll.zappy5.app/privacy
 Information about how user data is collected, stored, and protected.
 
 ### Terms & Conditions
-https://example.com/terms
+https://roast-roll.zappy5.app/terms
 Legal terms describing service usage, rights, and policies.
 
 ### Accessibility Statement
-https://example.com/accessibility
+https://roast-roll.zappy5.app/accessibility
 Information about WCAG compliance and accessibility features.
 
 ---
@@ -43,8 +43,8 @@ Information about WCAG compliance and accessibility features.
 - (No contact details configured yet.)
 
 ### Contact form
-- URL: https://example.com/contact
-- Endpoint: https://example.com/api/email/contact-form
+- URL: https://roast-roll.zappy5.app/contact
+- Endpoint: https://roast-roll.zappy5.app/api/email/contact-form
 - Method: POST
 - Content-Type: application/json
 - Fields:
@@ -78,6 +78,6 @@ Food & Beverage
 
 # Machine-readable feeds
 
-- Sitemap (XML): https://example.com/sitemap.xml
-- Robots: https://example.com/robots.txt
-- Flattened page text (for LLMs): https://example.com/llms-full.txt
+- Sitemap (XML): https://roast-roll.zappy5.app/sitemap.xml
+- Robots: https://roast-roll.zappy5.app/robots.txt
+- Flattened page text (for LLMs): https://roast-roll.zappy5.app/llms-full.txt
