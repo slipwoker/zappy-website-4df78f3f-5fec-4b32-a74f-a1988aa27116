@@ -112,6 +112,37 @@
   var visitorId = getVisitorId();
   var sessionId = getSessionId();
   
+  // Site Optimization Agent — visual heatmap helpers
+  function getBandAnchor(el) {
+    var node = el;
+    while (node && node !== document.body) {
+      if (node.getAttribute && node.getAttribute('data-band-index') != null) {
+        return { bandIndex: node.getAttribute('data-band-index'), sectionId: node.id || null };
+      }
+      node = node.parentElement;
+    }
+    node = el;
+    while (node && node !== document.body) {
+      if (node.tagName === 'SECTION' && node.id) {
+        return { bandIndex: null, sectionId: node.id };
+      }
+      node = node.parentElement;
+    }
+    return { bandIndex: null, sectionId: null };
+  }
+  function heatmapFields(el, e) {
+    var anchor = getBandAnchor(el);
+    return {
+      x: Math.round((e && e.pageX) || 0),
+      y: Math.round((e && e.pageY) || 0),
+      bandIndex: anchor.bandIndex,
+      sectionId: anchor.sectionId
+    };
+  }
+  function mergeFields(base, extra) {
+    for (var k in extra) { if (Object.prototype.hasOwnProperty.call(extra, k)) base[k] = extra[k]; }
+    return base;
+  }
   // Track an event
   function trackEvent(eventType, data) {
     data = data || {};
@@ -161,26 +192,61 @@
       // Track button clicks (counted as actions)
       if (target.tagName === 'BUTTON' || target.closest('button')) {
         var button = target.tagName === 'BUTTON' ? target : target.closest('button');
-        trackEvent('click', {
+        var clickMeta = {
           element: 'button',
           text: button.textContent.trim().substring(0, 100),
           id: button.id || null,
           class: button.className || null
-        });
+        };
+        mergeFields(clickMeta, heatmapFields(button, e));
+        trackEvent('click', clickMeta);
       }
       
       // Track link clicks (navigation - not counted as actions)
       else if (target.tagName === 'A' || target.closest('a')) {
         var link = target.tagName === 'A' ? target : target.closest('a');
-        trackEvent('navigation', {
+        var navMeta = {
           element: 'link',
           text: link.textContent.trim().substring(0, 100),
           href: link.href,
           external: link.hostname !== window.location.hostname
-        });
+        };
+        mergeFields(navMeta, heatmapFields(link, e));
+        trackEvent('navigation', navMeta);
       }
     }, true);
   }
+  
+  // Track scroll depth milestones (visual heatmap reach signal)
+  (function() {
+    var milestones = [25, 50, 75, 100];
+    var fired = {};
+    var maxDepth = 0;
+    function computeDepth() {
+      var doc = document.documentElement;
+      var scrollable = (doc.scrollHeight - window.innerHeight);
+      if (scrollable <= 0) return 100;
+      return Math.min(100, Math.round(((window.scrollY || window.pageYOffset || 0) / scrollable) * 100));
+    }
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function() {
+        var depth = computeDepth();
+        if (depth > maxDepth) maxDepth = depth;
+        for (var i = 0; i < milestones.length; i++) {
+          var m = milestones[i];
+          if (depth >= m && !fired[m]) {
+            fired[m] = true;
+            trackEvent('scroll_depth', { milestone: m, maxDepthPct: maxDepth });
+          }
+        }
+        ticking = false;
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
   
   // Track form submissions
   if (config.trackFormSubmissions) {
@@ -223,23 +289,14 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Find Us &amp; Fuel Your Day — Roast &amp; Roll">
     <meta name="twitter:description" content="Looking for the best specialty coffee and sandwiches near you? Get directions, hours, and reach out to Roast &amp; Roll. We&#39;d love to welcome you into our cozy Colorado café.">
-    </meta>
-  </meta>
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
   
-  </meta>
-  </meta>
-  </meta>
   
-  </meta>
-  </meta>
-  <meta property="og:type" content="website"></meta>
-  <meta property="og:locale" content="en_US"></meta>
   
-  </meta>
-  </meta>
-  </meta>
-  </link>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></link>
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .skip-link { position: absolute; top: 0; left: 0; transform: translateY(-200%); padding: 12px 18px; background: var(--bg-dark, #1a1a1a); color: var(--text-light, #fff); font-weight: 600; border-radius: 0 0 8px 0; z-index: 10000; }
     .skip-link:focus { transform: none; outline: 2px solid var(--ring, #fff); outline-offset: 2px; }
@@ -249,15 +306,15 @@
 
   
     <!-- Favicons -->
-    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"></link>
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"></link>
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"></link>
-    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png"></link>
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png"></link>
-    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png"></link>
-    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"></link>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
     <!-- Cookie Consent -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css"></link>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
     <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
     <!-- Mickidum Accessibility Toolbar -->
     <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
@@ -371,7 +428,7 @@
 
   <div class="nav-container">
     <div class="nav-brand">
-      <a href="/" class="logo-link"><img class="logo" src="/assets/site-contact-image-1.webp" alt="Roast &amp;amp;amp; Roll"></img></a>
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-contact-image-1.webp" alt="Roast &amp;amp;amp; Roll"></a>
     </div>
 
     <ul class="nav-menu" id="navMenu"><li><a href="/" data-i18n="nav-home">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li></ul>
@@ -417,12 +474,12 @@
     // Check if background is transparent or rgba with 0 alpha
     const isTransparent = bgColor === 'transparent' || 
                          bgColor === 'rgba(0, 0, 0, 0)' ||
-                         (bgColor.startsWith('rgba') &amp;amp;&amp;amp; bgColor.includes(', 0)'));
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
     
     if (isTransparent) {
       // Check for background-image or gradient
       const bgImage = computedStyle.backgroundImage;
-      if (bgImage &amp;amp;&amp;amp; bgImage !== 'none') {
+      if (bgImage && bgImage !== 'none') {
         console.log('[Navbar] Navbar has background image/gradient, using dark text');
         bgColor = 'rgb(240, 240, 240)'; // Assume light background
       } else {
@@ -435,7 +492,7 @@
     
     // Calculate luminance to determine if background is light or dark
     const rgb = bgColor.match(/\d+/g);
-    if (rgb &amp;amp;&amp;amp; rgb.length &amp;gt;= 3) {
+    if (rgb && rgb.length >= 3) {
       const r = parseInt(rgb[0]);
       const g = parseInt(rgb[1]);
       const b = parseInt(rgb[2]);
@@ -593,7 +650,7 @@
       // ONLY apply inline positioning styles on mobile viewport
       // On desktop, the CSS handles hiding these buttons with display: none
       // Inline styles were breaking desktop layout by overriding CSS
-      const isMobileViewport = window.innerWidth &amp;lt;= 768;
+      const isMobileViewport = window.innerWidth <= 768;
       
       if (mobileToggle) {
         // Icon sizing applies to all viewports for consistency
@@ -742,7 +799,7 @@
     var lastToggleTime = 0;
     function guardedToggle(e) {
       var now = Date.now();
-      if (now - lastToggleTime &amp;lt; 300) return;
+      if (now - lastToggleTime < 300) return;
       lastToggleTime = now;
       handleToggle(e);
     }
@@ -803,7 +860,7 @@
       phoneBtn.addEventListener('click', function() {
         // Get phone number from placeholder in page or use default
         const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
-        const phoneNumber = phoneLinks.length &amp;gt; 0 
+        const phoneNumber = phoneLinks.length > 0 
           ? phoneLinks[0].getAttribute('href').replace('tel:', '')
           : '[business_phone]';
         
@@ -922,17 +979,17 @@
 
             <div class="ccf-field-group">
               <label class="ccf-label" for="ccf-name">Full Name</label>
-              <input class="ccf-input" type="text" id="ccf-name" name="name" placeholder="Your name" required=""></input>
+              <input class="ccf-input" type="text" id="ccf-name" name="name" placeholder="Your name" required="">
             </div>
 
             <div class="ccf-field-group">
               <label class="ccf-label" for="ccf-email">Email Address</label>
-              <input class="ccf-input" type="email" id="ccf-email" name="email" placeholder="your@email.com" required=""></input>
+              <input class="ccf-input" type="email" id="ccf-email" name="email" placeholder="your@email.com" required="">
             </div>
 
             <div class="ccf-field-group">
               <label class="ccf-label" for="ccf-phone">Phone Number</label>
-              <input class="ccf-input" type="tel" id="ccf-phone" name="phone" placeholder="(720) 000-0000"></input>
+              <input class="ccf-input" type="tel" id="ccf-phone" name="phone" placeholder="(720) 000-0000">
             </div>
 
             <div class="ccf-field-group">
@@ -942,7 +999,7 @@
 
             <div class="privacy-consent">
               <label class="privacy-consent-label">
-                <input type="checkbox" name="privacy_consent" class="privacy-consent-checkbox" required=""></input>
+                <input type="checkbox" name="privacy_consent" class="privacy-consent-checkbox" required="">
                 <span>I have read and agree to the <a href="/terms" target="_blank">Terms &amp;amp;amp; Conditions</a> and <a href="/privacy" target="_blank">Privacy Policy</a></span>
               </label>
             </div>
@@ -956,7 +1013,7 @@
       <!-- IMAGE COLUMN -->
       <div class="ccf-image-col">
         <div class="ccf-image-wrap">
-          <img loading="eager" fetchpriority="high" data-placeholder="contact-contact-form-image-1" data-context="Bright, warmly lit artisan coffee shop counter scene at Roast &amp;amp;amp; Roll in Colorado. A barista" s="" hands="" pour="" a="" latte="" with="" beautiful="" art="" into="" ceramic="" mug.="" the="" counter="" is="" styled="" small="" vase="" of="" wildflowers,="" pastry="" display="" case="" showing="" croissants="" and="" muffins,="" warm="" wood="" surfaces.="" natural="" window="" light="" floods="" scene,="" creating="" cozy="" boutique="" café="" atmosphere.="" color="" palette:="" creams,="" browns,="" sage="" greens.'="" width="600" height="750" src="/assets/site-contact-contact-form-image-1.webp" alt="Barista crafting latte art at the Roast &amp;amp;amp; Roll coffee counter in Colorado"></img>
+          <img loading="eager" fetchpriority="high" data-placeholder="contact-contact-form-image-1" data-context="Bright, warmly lit artisan coffee shop counter scene at Roast &amp;amp;amp; Roll in Colorado. A barista" s="" hands="" pour="" a="" latte="" with="" beautiful="" art="" into="" ceramic="" mug.="" the="" counter="" is="" styled="" small="" vase="" of="" wildflowers,="" pastry="" display="" case="" showing="" croissants="" and="" muffins,="" warm="" wood="" surfaces.="" natural="" window="" light="" floods="" scene,="" creating="" cozy="" boutique="" café="" atmosphere.="" color="" palette:="" creams,="" browns,="" sage="" greens.'="" width="600" height="750" src="/assets/site-contact-contact-form-image-1.webp" alt="Barista crafting latte art at the Roast &amp;amp;amp; Roll coffee counter in Colorado">
           <div class="ccf-image-accent" aria-hidden="true">
             <svg data-no-icon-edit="true" aria-hidden="true" width="48" height="48" viewbox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M24 4 C24 4, 28 14, 38 16 C28 18, 24 28, 24 28 C24 28, 20 18, 10 16 C20 14, 24 4 24 4Z" fill="var(--accent)" opacity="0.7"></path>
@@ -1135,7 +1192,7 @@
 </section>
   </main>
   
-  <footer class="site-footer" aria-label="Site Footer"><div class="footer-container"><div class="footer-top"><div class="footer-col footer-brand"><img src="/assets/roast-roll-food-beverage-logo.webp" alt="Roast &amp;amp;amp; Roll" class="logo"></img><p class="footer-tagline">Handcrafted coffee and bold flavors brewed with Colorado heart. Every cup, every bite — made with care.</p><div class="footer-social" aria-label="Social media links"></div></div><div class="footer-col footer-links"><h3 class="footer-heading">Quick Links</h3><ul class="footer-nav" aria-label="Quick navigation links"><li><a href="/">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-hours"><h3 class="footer-heading">Hours</h3><ul class="hours-list" aria-label="Business hours"><li><a href="/"><span class="day">Mon – Fri</span><span class="time">7:00 AM – 7:00 PM</span></a></li><li><a href="/"><span class="day">Saturday</span><span class="time">8:00 AM – 6:00 PM</span></a></li><li><a href="/"><span class="day">Sunday</span><span class="time">9:00 AM – 4:00 PM</span></a></li></ul><span class="hours-badge"><i class="fas fa-leaf"></i> Fresh daily</span></div><div class="footer-col footer-contact-col"><h3 class="footer-heading">Contact</h3><ul class="footer-contact" aria-label="Contact information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div></div><div class="footer-bottom"><p class="footer-copyright">© 2026 Roast &amp;amp;amp; Roll. All rights reserved.</p><div class="footer-legal" aria-label="Legal links"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp;amp;amp; Conditions</a><a href="/accessibility">Accessibility</a><a href="https://zappy5.com" target="_blank" class="zappy-attribution" rel="noopener noreferrer">Generated by Zappy</a></div></div></div></footer>
+  <footer class="site-footer" aria-label="Site Footer"><div class="footer-container"><div class="footer-top"><div class="footer-col footer-brand"><img src="/assets/roast-roll-food-beverage-logo.webp" alt="Roast &amp;amp;amp; Roll" class="logo"><p class="footer-tagline">Handcrafted coffee and bold flavors brewed with Colorado heart. Every cup, every bite — made with care.</p><div class="footer-social" aria-label="Social media links"></div></div><div class="footer-col footer-links"><h3 class="footer-heading">Quick Links</h3><ul class="footer-nav" aria-label="Quick navigation links"><li><a href="/">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-hours"><h3 class="footer-heading">Hours</h3><ul class="hours-list" aria-label="Business hours"><li><a href="/"><span class="day">Mon – Fri</span><span class="time">7:00 AM – 7:00 PM</span></a></li><li><a href="/"><span class="day">Saturday</span><span class="time">8:00 AM – 6:00 PM</span></a></li><li><a href="/"><span class="day">Sunday</span><span class="time">9:00 AM – 4:00 PM</span></a></li></ul><span class="hours-badge"><i class="fas fa-leaf"></i> Fresh daily</span></div><div class="footer-col footer-contact-col"><h3 class="footer-heading">Contact</h3><ul class="footer-contact" aria-label="Contact information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div></div><div class="footer-bottom"><p class="footer-copyright">© 2026 Roast &amp;amp;amp; Roll. All rights reserved.</p><div class="footer-legal" aria-label="Legal links"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp;amp;amp; Conditions</a><a href="/accessibility">Accessibility</a><a href="https://zappy5.com" target="_blank" class="zappy-attribution" rel="noopener noreferrer">Generated by Zappy</a></div></div></div></footer>
   
   <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
     <i class="fab fa-whatsapp"></i>

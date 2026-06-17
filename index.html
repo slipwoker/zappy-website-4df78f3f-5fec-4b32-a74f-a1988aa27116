@@ -112,6 +112,37 @@
   var visitorId = getVisitorId();
   var sessionId = getSessionId();
   
+  // Site Optimization Agent — visual heatmap helpers
+  function getBandAnchor(el) {
+    var node = el;
+    while (node && node !== document.body) {
+      if (node.getAttribute && node.getAttribute('data-band-index') != null) {
+        return { bandIndex: node.getAttribute('data-band-index'), sectionId: node.id || null };
+      }
+      node = node.parentElement;
+    }
+    node = el;
+    while (node && node !== document.body) {
+      if (node.tagName === 'SECTION' && node.id) {
+        return { bandIndex: null, sectionId: node.id };
+      }
+      node = node.parentElement;
+    }
+    return { bandIndex: null, sectionId: null };
+  }
+  function heatmapFields(el, e) {
+    var anchor = getBandAnchor(el);
+    return {
+      x: Math.round((e && e.pageX) || 0),
+      y: Math.round((e && e.pageY) || 0),
+      bandIndex: anchor.bandIndex,
+      sectionId: anchor.sectionId
+    };
+  }
+  function mergeFields(base, extra) {
+    for (var k in extra) { if (Object.prototype.hasOwnProperty.call(extra, k)) base[k] = extra[k]; }
+    return base;
+  }
   // Track an event
   function trackEvent(eventType, data) {
     data = data || {};
@@ -161,26 +192,61 @@
       // Track button clicks (counted as actions)
       if (target.tagName === 'BUTTON' || target.closest('button')) {
         var button = target.tagName === 'BUTTON' ? target : target.closest('button');
-        trackEvent('click', {
+        var clickMeta = {
           element: 'button',
           text: button.textContent.trim().substring(0, 100),
           id: button.id || null,
           class: button.className || null
-        });
+        };
+        mergeFields(clickMeta, heatmapFields(button, e));
+        trackEvent('click', clickMeta);
       }
       
       // Track link clicks (navigation - not counted as actions)
       else if (target.tagName === 'A' || target.closest('a')) {
         var link = target.tagName === 'A' ? target : target.closest('a');
-        trackEvent('navigation', {
+        var navMeta = {
           element: 'link',
           text: link.textContent.trim().substring(0, 100),
           href: link.href,
           external: link.hostname !== window.location.hostname
-        });
+        };
+        mergeFields(navMeta, heatmapFields(link, e));
+        trackEvent('navigation', navMeta);
       }
     }, true);
   }
+  
+  // Track scroll depth milestones (visual heatmap reach signal)
+  (function() {
+    var milestones = [25, 50, 75, 100];
+    var fired = {};
+    var maxDepth = 0;
+    function computeDepth() {
+      var doc = document.documentElement;
+      var scrollable = (doc.scrollHeight - window.innerHeight);
+      if (scrollable <= 0) return 100;
+      return Math.min(100, Math.round(((window.scrollY || window.pageYOffset || 0) / scrollable) * 100));
+    }
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function() {
+        var depth = computeDepth();
+        if (depth > maxDepth) maxDepth = depth;
+        for (var i = 0; i < milestones.length; i++) {
+          var m = milestones[i];
+          if (depth >= m && !fired[m]) {
+            fired[m] = true;
+            trackEvent('scroll_depth', { milestone: m, maxDepthPct: maxDepth });
+          }
+        }
+        ticking = false;
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
   
   // Track form submissions
   if (config.trackFormSubmissions) {
@@ -223,23 +289,14 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Sip, Savor & Stay Awhile — Roast & Roll">
     <meta name="twitter:description" content="Discover Colorado's coziest boutique café. Roast & Roll serves handcrafted specialty coffee, fresh pastries, and artisan sandwiches made with love. Visit us today!">
-    </meta>
-  </meta>
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
   
-  </meta>
-  </meta>
-  </meta>
   
-  </meta>
-  </meta>
-  <meta property="og:type" content="website"></meta>
-  <meta property="og:locale" content="en_US"></meta>
   
-  </meta>
-  </meta>
-  </meta>
-  </link>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></link>
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .skip-link { position: absolute; top: 0; left: 0; transform: translateY(-200%); padding: 12px 18px; background: var(--bg-dark, #1a1a1a); color: var(--text-light, #fff); font-weight: 600; border-radius: 0 0 8px 0; z-index: 10000; }
     .skip-link:focus { transform: none; outline: 2px solid var(--ring, #fff); outline-offset: 2px; }
@@ -249,15 +306,15 @@
 
   
     <!-- Favicons -->
-    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"></link>
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"></link>
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"></link>
-    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png"></link>
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png"></link>
-    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png"></link>
-    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"></link>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
     <!-- Cookie Consent -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css"></link>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
     <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
     <!-- Mickidum Accessibility Toolbar -->
     <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
@@ -355,23 +412,23 @@
 <a class="skip-link" href="#main">Skip to main content</a>
   <nav class="navbar">
   <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
-    <svg class="hamburger-icon" width="24" height="24" viewbox="0 0 24 24" fill="none">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
       <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
     </svg>
-    <svg class="close-icon" width="24" height="24" viewbox="0 0 24 24" fill="none" style="display: none;">
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
       <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
     </svg>
   </button>
 
   <button class="phone-header-btn" data-phone="" aria-label="Call">
-    <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
     </svg>
   </button>
 
   <div class="nav-container">
     <div class="nav-brand">
-      <a href="/" class="logo-link"><img class="logo" src="/assets/site-home-image-1.webp" alt="Roast &amp;amp;amp; Roll"></img></a>
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-home-image-1.webp" alt="Roast &amp; Roll"></a>
     </div>
 
     <ul class="nav-menu" id="navMenu"><li><a href="/" data-i18n="nav-home">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li></ul>
@@ -417,12 +474,12 @@
     // Check if background is transparent or rgba with 0 alpha
     const isTransparent = bgColor === 'transparent' || 
                          bgColor === 'rgba(0, 0, 0, 0)' ||
-                         (bgColor.startsWith('rgba') &amp;amp;&amp;amp; bgColor.includes(', 0)'));
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
     
     if (isTransparent) {
       // Check for background-image or gradient
       const bgImage = computedStyle.backgroundImage;
-      if (bgImage &amp;amp;&amp;amp; bgImage !== 'none') {
+      if (bgImage && bgImage !== 'none') {
         console.log('[Navbar] Navbar has background image/gradient, using dark text');
         bgColor = 'rgb(240, 240, 240)'; // Assume light background
       } else {
@@ -435,7 +492,7 @@
     
     // Calculate luminance to determine if background is light or dark
     const rgb = bgColor.match(/\d+/g);
-    if (rgb &amp;amp;&amp;amp; rgb.length &amp;gt;= 3) {
+    if (rgb && rgb.length >= 3) {
       const r = parseInt(rgb[0]);
       const g = parseInt(rgb[1]);
       const b = parseInt(rgb[2]);
@@ -593,7 +650,7 @@
       // ONLY apply inline positioning styles on mobile viewport
       // On desktop, the CSS handles hiding these buttons with display: none
       // Inline styles were breaking desktop layout by overriding CSS
-      const isMobileViewport = window.innerWidth &amp;lt;= 768;
+      const isMobileViewport = window.innerWidth <= 768;
       
       if (mobileToggle) {
         // Icon sizing applies to all viewports for consistency
@@ -742,7 +799,7 @@
     var lastToggleTime = 0;
     function guardedToggle(e) {
       var now = Date.now();
-      if (now - lastToggleTime &amp;lt; 300) return;
+      if (now - lastToggleTime < 300) return;
       lastToggleTime = now;
       handleToggle(e);
     }
@@ -803,7 +860,7 @@
       phoneBtn.addEventListener('click', function() {
         // Get phone number from placeholder in page or use default
         const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
-        const phoneNumber = phoneLinks.length &amp;gt; 0 
+        const phoneNumber = phoneLinks.length > 0 
           ? phoneLinks[0].getAttribute('href').replace('tel:', '')
           : '[business_phone]';
         
@@ -822,17 +879,17 @@
 </script>
   
   <main id="main">
-    <section data-band-index="0" class="home-hero-section" data-layout-spec="Home-hero" data-hero-type="fullscreen-scrim" id="home-hero-section" style="min-height: 1236.43px !important;" data-zappy-content-align="upper-mid-left">
+    <section data-band-index="0" class="home-hero-section" data-layout-spec="Home-hero" data-hero-type="fullscreen-scrim" id="home-hero-section" style="min-height: 1114.29px !important;" data-zappy-content-align="upper-mid-left">
   <!-- Background Image -->
   <div class="home-hero-bg-wrapper">
-    <img loading="eager" fetchpriority="high" data-hero-bg="true" data-placeholder="home-hero-image-1" data-context="Bright sunlit artisan café counter scene at a boutique Colorado coffee shop. Morning golden light streams through large windows onto a polished wooden counter. A barista" s="" hands="" hold="" a="" ceramic="" latte="" cup="" with="" intricate="" art.="" fresh="" pastries="" —="" croissants,="" scones,="" and="" cinnamon="" rolls="" sit="" on="" wooden="" board="" beside="" the="" espresso="" machine.="" rustic="" sandwich="" sourdough="" is="" visible="" in="" background.="" warm,="" airy,="" editorial="" food="" photography="" slight="" warm="" color="" grade.="" very="" inviting="" cozy="" mountain-town="" café="" atmosphere.'="" width="1440" height="900" src="/assets/site-home-hero-image-1.webp" alt="Artisan café counter at Roast and Roll coffee shop with latte art, pastries, and morning mountain light" data-hero-background="true" data-element-type="image" data-element-id="img-1779701632981-ry3ejwusp"></img>
+    <img loading="eager" fetchpriority="high" data-hero-bg="true" data-placeholder="home-hero-image-1" data-context="Bright sunlit artisan café counter scene at a boutique Colorado coffee shop. Morning golden light streams through large windows onto a polished wooden counter. A barista" s="" hands="" hold="" a="" ceramic="" latte="" cup="" with="" intricate="" art.="" fresh="" pastries="" —="" croissants,="" scones,="" and="" cinnamon="" rolls="" sit="" on="" wooden="" board="" beside="" the="" espresso="" machine.="" rustic="" sandwich="" sourdough="" is="" visible="" in="" background.="" warm,="" airy,="" editorial="" food="" photography="" slight="" warm="" color="" grade.="" very="" inviting="" cozy="" mountain-town="" café="" atmosphere.'="" width="1440" height="900" src="/assets/site-home-hero-image-1.webp" alt="Artisan café counter at Roast and Roll coffee shop with latte art, pastries, and morning mountain light" data-hero-background="true" data-element-type="image" data-element-id="img-1779701632981-ry3ejwusp" style="object-position: 50% 50%;">
     <!-- Scrim overlay for legibility -->
     <div class="home-hero-scrim" aria-hidden="true"></div>
   </div>
 
   <!-- Mountain peaks watermark decoration -->
   <div class="home-hero-mountain-watermark" aria-hidden="true">
-    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 220 120" fill="none" xmlns="http://www.w3.org/2000/svg" width="220" height="120">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 220 120" fill="none" xmlns="http://www.w3.org/2000/svg" width="220" height="120">
       <polyline points="10,110 70,30 100,65 140,15 180,70 210,45 210,110" stroke="#FCFAF6" stroke-width="1.5" fill="none" opacity="0.13"></polyline>
       <polyline points="30,110 70,50 100,80 140,35 180,85 210,65 210,110" stroke="#FCFAF6" stroke-width="1" fill="none" opacity="0.07"></polyline>
     </svg>
@@ -844,7 +901,7 @@
       <!-- Eyebrow label -->
       <p style="color: rgb(252, 250, 246) !important;"><span class="home-hero-eyebrow" style="color: rgb(252, 250, 246) !important;">Colorado Boutique Coffee</span>
 
-      </p><h1 class="home-hero-headline">Roast &amp;amp;amp; Roll — Crafted with Heart in Colorado</h1>
+      </p><h1 class="home-hero-headline" style="box-sizing: border-box !important; outline: none; display: block !important; width: min(459px, max(100%, -48px + 100vw)) !important; max-width: 459px !important; margin-left: calc(0.5 * (100% - min(459px, max(100%, -48px + 100vw)))) !important; margin-right: calc(0.5 * (100% - min(459px, max(100%, -48px + 100vw)))) !important; margin-inline: calc(0.5 * (100% - min(459px, max(100%, -48px + 100vw)))) !important;" data-zappy-text-width="custom">Roast &amp; Roll — Crafted with Heart in Colorado</h1>
 
       <h3 class="home-hero-subtitle">Handcrafted espresso drinks, freshly made sandwiches, and house-baked pastries — served with warmth in every cup.</h3>
 
@@ -858,7 +915,7 @@
   <!-- Bottom divider: soft curved fade transitioning to next light section with caramel accent line -->
   <div class="home-hero-divider-wrapper" aria-hidden="true">
     <div class="home-hero-divider-accent-line"></div>
-    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 1440 72" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1440 72" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M0,72 L0,40 Q180,10 360,32 T720,20 Q900,8 1080,28 T1440,18 L1440,72 Z" fill="var(--bg-light)"></path>
     </svg>
   </div>
@@ -871,7 +928,7 @@
     <header class="home-features-header">
       <!-- Botanical divider motif -->
       <div class="home-features-botanical" aria-hidden="true">
-        <svg data-no-icon-edit="true" aria-hidden="true" width="120" height="24" viewbox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg data-no-icon-edit="true" aria-hidden="true" width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <line x1="0" y1="12" x2="48" y2="12" stroke="#C97A3D" stroke-width="1" stroke-opacity="0.6"></line>
           <path d="M55 12 C57 8, 60 6, 60 12 C60 6, 63 8, 65 12" stroke="#C97A3D" stroke-width="1" stroke-opacity="0.8" fill="none"></path>
           <circle cx="60" cy="12" r="1.5" fill="#C97A3D" fill-opacity="0.7"></circle>
@@ -882,7 +939,7 @@
       </div>
       <p class="home-features-eyebrow">Handcrafted with care</p>
       <h2 class="home-features-title">What We Do Best</h2>
-      <p class="home-features-intro">At Roast &amp;amp;amp; Roll, every cup, sandwich, and pastry is made with intention. We source the finest ingredients and bring Colorado warmth to every detail — so you always leave a little happier than when you arrived.</p>
+      <p class="home-features-intro">At Roast &amp; Roll, every cup, sandwich, and pastry is made with intention. We source the finest ingredients and bring Colorado warmth to every detail — so you always leave a little happier than when you arrived.</p>
     </header>
 
     <!-- Three Feature Cards -->
@@ -891,11 +948,11 @@
       <!-- Card 1: Artisan Coffee -->
       <article class="home-features-card" data-grid-item-index="0">
         <figure class="home-features-card-image-wrap">
-          <img loading="lazy" decoding="async" data-placeholder="home-features-image-1" data-context="Close-up overhead shot of a beautifully crafted espresso drink in a ceramic cup on a rustic wooden café table in Colorado. Latte art rosette on the surface, warm morning light, artisan boutique coffee shop atmosphere, rich espresso brown tones, cozy and refined." width="600" height="400" src="/assets/site-home-features-image-1.webp" alt="Handcrafted espresso latte art at Roast and Roll coffee shop" data-element-type="image" data-element-id="img-1779795336514-lwvs4yxqi" ></img>
+          <img loading="lazy" decoding="async" data-placeholder="home-features-image-1" data-context="Close-up overhead shot of a beautifully crafted espresso drink in a ceramic cup on a rustic wooden café table in Colorado. Latte art rosette on the surface, warm morning light, artisan boutique coffee shop atmosphere, rich espresso brown tones, cozy and refined." width="600" height="400" src="/assets/site-home-features-image-1.webp" alt="Handcrafted espresso latte art at Roast and Roll coffee shop" data-element-type="image" data-element-id="img-1779795336514-lwvs4yxqi" >
         </figure>
         <div class="home-features-card-body">
           <div class="home-features-card-icon" aria-hidden="true">
-            <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M6 10h16v2a8 8 0 01-16 0v-2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" fill="none"></path>
               <path d="M22 12h2a2 2 0 010 4h-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"></path>
               <line x1="10" y1="22" x2="18" y2="22" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></line>
@@ -903,7 +960,7 @@
               <path d="M11 6 C11 4, 13 3, 13 5 C13 3, 15 2, 15 4 C15 2, 17 3, 17 5" stroke="currentColor" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.6"></path>
             </svg>
           </div>
-          <h3 class="home-features-card-title">Artisan Espresso &amp;amp;amp; Coffee</h3>
+          <h3 class="home-features-card-title">Artisan Espresso &amp; Coffee</h3>
           <p class="home-features-card-desc">Every shot is pulled with precision. Our baristas craft handcrafted espresso drinks — from velvety flat whites to seasonal lattes — using single-origin beans roasted to bring out Colorado's favorite morning ritual.</p>
         </div>
       </article>
@@ -911,11 +968,11 @@
       <!-- Card 2: Fresh Sandwiches -->
       <article class="home-features-card" data-grid-item-index="1">
         <figure class="home-features-card-image-wrap">
-          <img loading="lazy" decoding="async" data-placeholder="home-features-image-2" data-context="Freshly made artisan sandwich on a wooden cutting board in a cozy Colorado café setting. Crusty sourdough bread, layered with fresh greens, sliced turkey, and heirloom tomatoes. Natural light, clean and inviting food styling, boutique café atmosphere." width="600" height="400" src="/assets/site-home-features-image-2.webp" alt="Fresh handmade sandwich at Roast and Roll café" data-element-type="image" data-element-id="img-1779795336514-4j3y1ao9r" ></img>
+          <img loading="lazy" decoding="async" data-placeholder="home-features-image-2" data-context="Freshly made artisan sandwich on a wooden cutting board in a cozy Colorado café setting. Crusty sourdough bread, layered with fresh greens, sliced turkey, and heirloom tomatoes. Natural light, clean and inviting food styling, boutique café atmosphere." width="600" height="400" src="/assets/site-home-features-image-2.webp" alt="Fresh handmade sandwich at Roast and Roll café" data-element-type="image" data-element-id="img-1779795336514-4j3y1ao9r" >
         </figure>
         <div class="home-features-card-body">
           <div class="home-features-card-icon" aria-hidden="true">
-            <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="4" y="16" width="20" height="4" rx="2" stroke="currentColor" stroke-width="1.2" fill="none"></rect>
               <rect x="4" y="8" width="20" height="4" rx="2" stroke="currentColor" stroke-width="1.2" fill="none"></rect>
               <line x1="6" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"></line>
@@ -930,11 +987,11 @@
       <!-- Card 3: Bakery Pastries -->
       <article class="home-features-card" data-grid-item-index="2">
         <figure class="home-features-card-image-wrap">
-          <img loading="lazy" decoding="async" data-placeholder="home-features-image-3" data-context="Curated display of freshly baked pastries on a white marble counter in a boutique Colorado coffee shop. Includes golden croissants, almond tarts, and cinnamon morning buns. Warm soft light, elegant and inviting bakery styling, artisan café atmosphere." width="600" height="400" src="/assets/site-home-features-image-3.webp" alt="Daily fresh baked pastries at Roast and Roll boutique café" data-element-type="image" data-element-id="img-1779795336514-yam7sbx01" ></img>
+          <img loading="lazy" decoding="async" data-placeholder="home-features-image-3" data-context="Curated display of freshly baked pastries on a white marble counter in a boutique Colorado coffee shop. Includes golden croissants, almond tarts, and cinnamon morning buns. Warm soft light, elegant and inviting bakery styling, artisan café atmosphere." width="600" height="400" src="/assets/site-home-features-image-3.webp" alt="Daily fresh baked pastries at Roast and Roll boutique café" data-element-type="image" data-element-id="img-1779795336514-yam7sbx01" >
         </figure>
         <div class="home-features-card-body">
           <div class="home-features-card-icon" aria-hidden="true">
-            <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M5 18 Q7 12, 14 12 Q21 12, 23 18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"></path>
               <rect x="4" y="18" width="20" height="3" rx="1.5" stroke="currentColor" stroke-width="1.2" fill="none"></rect>
               <path d="M10 12 C10 9, 12 7, 14 7 C16 7, 18 9, 18 12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"></path>
@@ -951,7 +1008,7 @@
 
   <!-- Bottom diagonal paper-cut divider transitioning to next section -->
   <div class="home-features-divider-wrapper">
-    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 1200 60" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M0,60 L0,28 L1200,8 L1200,60 Z" fill="var(--bg-light)"></path>
     </svg>
   </div>
@@ -964,7 +1021,7 @@
     <!-- Section Header -->
     <header class="home-gallery-header">
       <h2 class="home-gallery-title">Made by Hand, Served with Heart</h2>
-      <p class="home-gallery-intro">Every cup, every sandwich, every pastry at Roast &amp;amp;amp; Roll is a small act of craft. Step inside and see what artisan coffee and fresh pastries look like when they're made with intention.</p>
+      <p class="home-gallery-intro">Every cup, every sandwich, every pastry at Roast &amp; Roll is a small act of craft. Step inside and see what artisan coffee and fresh pastries look like when they're made with intention.</p>
     </header>
 
     <!-- Asymmetrical Image Grid -->
@@ -973,7 +1030,7 @@
       <!-- Large tile: left/start -->
       <figure class="home-gallery-tile home-gallery-tile--large">
         <div class="home-gallery-img-wrap">
-          <img loading="lazy" decoding="async" data-placeholder="home-gallery-image-1" data-context="Close-up overhead shot of a barista pouring latte art into a ceramic cup on a warm wooden counter, natural Colorado morning light streaming through the window, steam rising, creamy rosette pattern forming, cozy boutique coffee shop atmosphere" width="720" height="900" src="/assets/site-home-gallery-image-1.webp" alt="Barista creating latte art at Roast &amp;amp;amp; Roll coffee shop"></img>
+          <img loading="lazy" decoding="async" data-placeholder="home-gallery-image-1" data-context="Close-up overhead shot of a barista pouring latte art into a ceramic cup on a warm wooden counter, natural Colorado morning light streaming through the window, steam rising, creamy rosette pattern forming, cozy boutique coffee shop atmosphere" width="720" height="900" src="/assets/site-home-gallery-image-1.webp" alt="Barista creating latte art at Roast &amp; Roll coffee shop">
         </div>
         <figcaption class="home-gallery-caption">
           <span class="home-gallery-caption-label">Latte Art</span>
@@ -986,7 +1043,7 @@
 
         <figure class="home-gallery-tile home-gallery-tile--small">
           <div class="home-gallery-img-wrap">
-            <img loading="lazy" decoding="async" data-placeholder="home-gallery-image-2" data-context="Overhead flat lay of freshly baked pastries on a white ceramic tray — flaky croissants, cinnamon rolls with glaze, and a small fruit danish arranged neatly on a wooden counter in a bright boutique Colorado bakery café, natural light, artisan presentation" width="560" height="380" src="/assets/site-home-gallery-image-2.webp" alt="Freshly baked pastry tray at Roast &amp;amp;amp; Roll"></img>
+            <img loading="lazy" decoding="async" data-placeholder="home-gallery-image-2" data-context="Overhead flat lay of freshly baked pastries on a white ceramic tray — flaky croissants, cinnamon rolls with glaze, and a small fruit danish arranged neatly on a wooden counter in a bright boutique Colorado bakery café, natural light, artisan presentation" width="560" height="380" src="/assets/site-home-gallery-image-2.webp" alt="Freshly baked pastry tray at Roast &amp; Roll">
           </div>
           <figcaption class="home-gallery-caption">
             <span class="home-gallery-caption-label">Fresh Pastries</span>
@@ -996,7 +1053,7 @@
 
         <figure class="home-gallery-tile home-gallery-tile--small">
           <div class="home-gallery-img-wrap">
-            <img loading="lazy" decoding="async" data-placeholder="home-gallery-image-3" data-context="Neatly wrapped artisan sandwich boards displayed on a wooden café counter — sourdough bread sandwiches with fresh greens, tomato, and cheese wrapped in parchment paper with a small Roast &amp;amp;amp; Roll sticker, warm natural light, cozy Colorado coffee shop vibe" width="560" height="380" src="/assets/site-home-gallery-image-3.webp" alt="Handcrafted sandwich boards wrapped in parchment at Roast &amp;amp;amp; Roll"></img>
+            <img loading="lazy" decoding="async" data-placeholder="home-gallery-image-3" data-context="Neatly wrapped artisan sandwich boards displayed on a wooden café counter — sourdough bread sandwiches with fresh greens, tomato, and cheese wrapped in parchment paper with a small Roast &amp; Roll sticker, warm natural light, cozy Colorado coffee shop vibe" width="560" height="380" src="/assets/site-home-gallery-image-3.webp" alt="Handcrafted sandwich boards wrapped in parchment at Roast &amp; Roll">
           </div>
           <figcaption class="home-gallery-caption">
             <span class="home-gallery-caption-label">Handcrafted Sandwiches</span>
@@ -1010,7 +1067,7 @@
     <!-- Bottom tagline -->
     <div class="home-gallery-tagline">
       <div class="home-gallery-tagline-rule"></div>
-      <p class="home-gallery-tagline-text">Roast &amp;amp;amp; Roll — your neighborhood coffee shop in Colorado, where every detail is handcrafted.</p>
+      <p class="home-gallery-tagline-text">Roast &amp; Roll — your neighborhood coffee shop in Colorado, where every detail is handcrafted.</p>
       <div class="home-gallery-tagline-rule"></div>
     </div>
 
@@ -1018,89 +1075,31 @@
 
   <!-- Bottom Section Divider: warm gradient wash into espresso brown -->
   <div class="home-gallery-divider-wrapper">
-    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 1200 90" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <lineargradient id="galleryDividerGrad" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="galleryDividerGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#FCFAF6" stop-opacity="0"></stop>
           <stop offset="55%" stop-color="#FCFAF6" stop-opacity="0.6"></stop>
           <stop offset="100%" stop-color="#5A3A2E" stop-opacity="1"></stop>
-        </lineargradient>
+        </linearGradient>
       </defs>
       <!-- Gradient wash layer -->
       <rect x="0" y="0" width="1200" height="90" fill="url(#galleryDividerGrad)"></rect>
       <!-- Curved mask path filling the bottom, matching next dark section -->
-      <path d="M0,90 L0,52 Q150,30 300,48 T600,38 Q800,28 1000,46 T1200,40 L1200,90 Z" fill="var(--bg-dark)"></path>
+      <path d="M0,90 L0,52 Q150,30 300,48 T600,38 Q800,28 1000,46 T1200,40 L1200,90 Z" fill="var(--bg-light)"></path>
     </svg>
   </div>
 
 </section>
 
-<section data-band-index="3" class="home-testimonials-section" data-layout-spec="Home-testimonials">
-  <div class="home-testimonials-container">
 
-    <!-- Section Header -->
-    <div class="home-testimonials-header">
-      <h2 class="home-testimonials-title">What Our Regulars Are Saying</h2>
-      <h3 class="home-testimonials-pull-quote">"Every cup feels like it was made just for you."</h3>
-    </div>
-
-    <!-- Testimonial Cards -->
-    <div class="home-testimonials-grid">
-
-      <article class="home-testimonial-card">
-        <div class="home-testimonial-quote-mark" aria-hidden="true">“</div>
-        <blockquote class="home-testimonial-quote">
-          <p>Roast &amp;amp;amp; Roll is my non-negotiable morning ritual. The cortado is perfectly balanced, the pastries are fresh every single day, and the space just feels like a warm hug. Nothing generic here — every detail is thoughtful.</p>
-        </blockquote>
-        <footer class="home-testimonial-footer">
-          <div class="home-testimonial-stars" aria-label="5 stars">★★★★★</div>
-          <div class="home-testimonial-author">Maya R.</div>
-          <div class="home-testimonial-identifier">Capitol Hill Local</div>
-        </footer>
-      </article>
-
-      <article class="home-testimonial-card">
-        <div class="home-testimonial-quote-mark" aria-hidden="true">“</div>
-        <blockquote class="home-testimonial-quote">
-          <p>I drive across town every weekend just for their avocado toast and a latte. The atmosphere is cozy, unhurried, and genuinely welcoming. It's the kind of café that makes Colorado mornings feel special.</p>
-        </blockquote>
-        <footer class="home-testimonial-footer">
-          <div class="home-testimonial-stars" aria-label="5 stars">★★★★★</div>
-          <div class="home-testimonial-author">Daniel T.</div>
-          <div class="home-testimonial-identifier">Weekend Regular</div>
-        </footer>
-      </article>
-
-      <article class="home-testimonial-card">
-        <div class="home-testimonial-quote-mark" aria-hidden="true">“</div>
-        <blockquote class="home-testimonial-quote">
-          <p>Every drink is an absolute work of art — I photograph them all. The handcrafted lattes and the soft morning light in this shop are a content creator's dream. Best specialty coffee and freshest pastries I've found in Colorado.</p>
-        </blockquote>
-        <footer class="home-testimonial-footer">
-          <div class="home-testimonial-stars" aria-label="5 stars">★★★★★</div>
-          <div class="home-testimonial-author">Sofia L.</div>
-          <div class="home-testimonial-identifier">Content Creator</div>
-        </footer>
-      </article>
-
-    </div>
-  </div>
-
-  <!-- Bottom scalloped divider transitioning to light CTA section -->
-  <div class="home-testimonials-divider-wrapper">
-    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 1200 72" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,72 L0,36 Q30,20 60,36 Q90,52 120,36 Q150,20 180,36 Q210,52 240,36 Q270,20 300,36 Q330,52 360,36 Q390,20 420,36 Q450,52 480,36 Q510,20 540,36 Q570,52 600,36 Q630,20 660,36 Q690,52 720,36 Q750,20 780,36 Q810,52 840,36 Q870,20 900,36 Q930,52 960,36 Q990,20 1020,36 Q1050,52 1080,36 Q1110,20 1140,36 Q1170,52 1200,36 L1200,72 Z" fill="var(--bg-light)"></path>
-    </svg>
-  </div>
-
-</section>
 
 <section data-band-index="4" class="home-cta-section" data-layout-spec="Home-cta">
   <div class="home-cta-container">
 
     <!-- Wheat sprig decorative accent -->
     <div class="home-cta-sprig" aria-hidden="true">
-      <svg data-no-icon-edit="true" aria-hidden="true" width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg data-no-icon-edit="true" aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
         <line x1="14" y1="26" x2="14" y2="6" stroke="var(--accent)" stroke-width="1.2" stroke-linecap="round"></line>
         <path d="M14 18 C10 16 8 12 10 9 C12 12 14 14 14 18Z" fill="var(--accent)" opacity="0.75"></path>
         <path d="M14 18 C18 16 20 12 18 9 C16 12 14 14 14 18Z" fill="var(--accent)" opacity="0.75"></path>
@@ -1116,14 +1115,14 @@
     <h2 class="home-cta-heading">Come Find Your Corner</h2>
 
     <!-- Supporting paragraph -->
-    <p class="home-cta-body">Whether you're chasing the perfect pour-over, a warm sandwich on a Colorado morning, or simply a quiet place to settle in — Roast &amp;amp;amp; Roll is here for it. We'd love to have you at our table.</p>
+    <p class="home-cta-body">Whether you're chasing the perfect pour-over, a warm sandwich on a Colorado morning, or simply a quiet place to settle in — Roast &amp; Roll is here for it. We'd love to have you at our table.</p>
 
     <!-- Location micro-line -->
     <p class="home-cta-location">
-      <svg data-no-icon-edit="true" aria-hidden="true" width="13" height="13" viewbox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-right:5px;">
+      <svg data-no-icon-edit="true" aria-hidden="true" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-right:5px;">
         <path d="M6.5 1C4.567 1 3 2.567 3 4.5C3 7.25 6.5 12 6.5 12C6.5 12 10 7.25 10 4.5C10 2.567 8.433 1 6.5 1ZM6.5 6C5.672 6 5 5.328 5 4.5C5 3.672 5.672 3 6.5 3C7.328 3 8 3.672 8 4.5C8 5.328 7.328 6 6.5 6Z" fill="var(--secondary)"></path>
       </svg>
-      <span>Serving the Colorado community — artisan coffee &amp;amp;amp; fresh pastries, every day</span>
+      <span>Serving the Colorado community — artisan coffee &amp; fresh pastries, every day</span>
     </p>
 
     <!-- CTA Buttons -->
@@ -1136,7 +1135,7 @@
 </section>
   </main>
   
-  <footer class="site-footer" aria-label="Site Footer"><div class="footer-container"><div class="footer-top"><div class="footer-col footer-brand"><img src="/assets/roast-roll-food-beverage-logo.webp" alt="Roast &amp;amp;amp; Roll" class="logo"></img><p class="footer-tagline">Handcrafted coffee and bold flavors brewed with Colorado heart. Every cup, every bite — made with care.</p><div class="footer-social" aria-label="Social media links"></div></div><div class="footer-col footer-links"><h3 class="footer-heading">Quick Links</h3><ul class="footer-nav" aria-label="Quick navigation links"><li><a href="/">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-hours"><h3 class="footer-heading">Hours</h3><ul class="hours-list" aria-label="Business hours"><li><a href="/"><span class="day">Mon – Fri</span><span class="time">7:00 AM – 7:00 PM</span></a></li><li><a href="/"><span class="day">Saturday</span><span class="time">8:00 AM – 6:00 PM</span></a></li><li><a href="/"><span class="day">Sunday</span><span class="time">9:00 AM – 4:00 PM</span></a></li></ul><span class="hours-badge"><i class="fas fa-leaf"></i> Fresh daily</span></div><div class="footer-col footer-contact-col"><h3 class="footer-heading">Contact</h3><ul class="footer-contact" aria-label="Contact information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div></div><div class="footer-bottom"><p class="footer-copyright">© 2026 Roast &amp;amp;amp; Roll. All rights reserved.</p><div class="footer-legal" aria-label="Legal links"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp;amp;amp; Conditions</a><a href="/accessibility">Accessibility</a><a href="https://zappy5.com" target="_blank" class="zappy-attribution" rel="noopener noreferrer">Generated by Zappy</a></div></div></div></footer>
+  <footer class="site-footer" aria-label="Site Footer"><div class="footer-container"><div class="footer-top"><div class="footer-col footer-brand"><img src="/assets/roast-roll-food-beverage-logo.webp" alt="Roast &amp; Roll" class="logo"><p class="footer-tagline">Handcrafted coffee and bold flavors brewed with Colorado heart. Every cup, every bite — made with care.</p><div class="footer-social" aria-label="Social media links"></div></div><div class="footer-col footer-links"><h3 class="footer-heading">Quick Links</h3><ul class="footer-nav" aria-label="Quick navigation links"><li><a href="/">Home</a></li><li><a href="/menu">Menu</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-hours"><h3 class="footer-heading">Hours</h3><ul class="hours-list" aria-label="Business hours"><li><a href="/"><span class="day">Mon – Fri</span><span class="time">7:00 AM – 7:00 PM</span></a></li><li><a href="/"><span class="day">Saturday</span><span class="time">8:00 AM – 6:00 PM</span></a></li><li><a href="/"><span class="day">Sunday</span><span class="time">9:00 AM – 4:00 PM</span></a></li></ul><span class="hours-badge"><i class="fas fa-leaf"></i> Fresh daily</span></div><div class="footer-col footer-contact-col"><h3 class="footer-heading">Contact</h3><ul class="footer-contact" aria-label="Contact information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div></div><div class="footer-bottom"><p class="footer-copyright">© 2026 Roast &amp; Roll. All rights reserved.</p><div class="footer-legal" aria-label="Legal links"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/accessibility">Accessibility</a><a href="https://zappy5.com" target="_blank" class="zappy-attribution" rel="noopener noreferrer">Generated by Zappy</a></div></div></div></footer>
   
   <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
     <i class="fab fa-whatsapp"></i>
